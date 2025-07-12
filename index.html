@@ -7,26 +7,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* PALETA DE CORES ELETROBRAS */
         :root {
-            --primary: #4285f4;
-            --primary-dark: #3367d6;
-            --primary-light: #e8f0fe;
-            --success: #34a853;
-            --warning: #fbbc05;
-            --danger: #ea4335;
+            /* Cores principais - Eletrobras */
+            --primary: #0066b3; /* Azul Eletrobras */
+            --primary-dark: #004b80;
+            --primary-light: #e6f0f7;
+            --secondary: #009a44; /* Verde Eletrobras */
+            --secondary-dark: #007a36;
+            --secondary-light: #e6f5ec;
+            --success: #009a44; /* Verde */
+            --warning: #ffc107; /* Amarelo */
+            --danger: #dc3545; /* Vermelho */
             --light-gray: #f5f5f5;
             --medium-gray: #e0e0e0;
             --dark-gray: #333;
             --text-light: #fff;
             
-            /* Variáveis para modo escuro */
+            /* Variáveis para tema claro */
             --bg-color: #f9f9f9;
             --text-color: #333;
             --card-bg: white;
             --table-bg: white;
             --table-header-bg: var(--primary);
-            --table-row-even: rgba(0,0,0,0.02);
-            --table-row-hover: rgba(66, 133, 244, 0.05);
+            --table-row-even: rgba(0, 102, 179, 0.05);
+            --table-row-hover: rgba(0, 102, 179, 0.1);
             --modal-bg: white;
             --input-bg: white;
             --input-border: var(--medium-gray);
@@ -34,18 +39,19 @@
         }
 
         .dark-mode {
-            --bg-color: #121212;
+            /* Tema escuro com tons de azul mais escuros */
+            --bg-color: #121f2b;
             --text-color: #e0e0e0;
-            --card-bg: #1e1e1e;
-            --table-bg: #1e1e1e;
-            --table-header-bg: #0d47a1;
-            --table-row-even: rgba(255,255,255,0.05);
-            --table-row-hover: rgba(66, 133, 244, 0.15);
-            --modal-bg: #1e1e1e;
-            --input-bg: #2d2d2d;
-            --input-border: #444;
+            --card-bg: #1a2a3a;
+            --table-bg: #1a2a3a;
+            --table-header-bg: #003d66;
+            --table-row-even: rgba(0, 154, 68, 0.1);
+            --table-row-hover: rgba(0, 154, 68, 0.2);
+            --modal-bg: #1a2a3a;
+            --input-bg: #2d3b4a;
+            --input-border: #3d4d5d;
             --shadow-color: rgba(0,0,0,0.3);
-            --medium-gray: #444;
+            --medium-gray: #3d4d5d;
         }
 
         * {
@@ -74,15 +80,28 @@
             transition: background-color 0.3s, box-shadow 0.3s;
         }
 
+        /* CABEÇALHO ESTILIZADO */
         header {
             margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--medium-gray);
+            padding: 15px;
+            border-bottom: 2px solid var(--secondary);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 8px;
+        }
+
+        header h1 {
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
         }
 
         .header-controls {
@@ -96,12 +115,23 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--text-color);
+            color: white;
             padding: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dark-mode-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.3);
         }
 
         h1, h2, h3 {
-            color: var(--text-color);
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -109,16 +139,26 @@
 
         h1 {
             font-size: 1.8rem;
+            font-weight: 700;
         }
 
         h2 {
             font-size: 1.5rem;
             margin: 20px 0 15px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 8px;
         }
 
         h3 {
             font-size: 1.2rem;
             margin: 15px 0 10px;
+            color: var(--secondary);
+        }
+
+        .dark-mode h1,
+        .dark-mode h2,
+        .dark-mode h3 {
+            color: var(--secondary-light);
         }
 
         .aba {
@@ -140,6 +180,11 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--primary);
+        }
+
+        .dark-mode label {
+            color: var(--secondary-light);
         }
 
         input, select, textarea {
@@ -156,8 +201,8 @@
 
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(0, 154, 68, 0.2);
         }
 
         textarea {
@@ -188,17 +233,22 @@
         }
 
         #btnSalvar {
-            background-color: var(--primary);
+            background-color: var(--secondary);
             color: var(--text-light);
         }
 
         #btnAlternarAba {
-            background-color: var(--dark-gray);
+            background-color: var(--primary);
             color: white;
         }
 
         #btnCancelar {
             background-color: var(--danger);
+            color: white;
+        }
+
+        #btnLogin, #btnConfirmRestore {
+            background-color: var(--secondary);
             color: white;
         }
 
@@ -211,7 +261,7 @@
         }
 
         .status-badge.success {
-            background-color: var(--success);
+            background-color: var(--secondary);
             color: var(--text-light);
         }
 
@@ -230,6 +280,8 @@
             border-collapse: collapse;
             margin-top: 15px;
             box-shadow: 0 1px 3px var(--shadow-color);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th, td {
@@ -255,11 +307,13 @@
         }
 
         tr.strike-warning {
-            background-color: rgba(251, 188, 5, 0.1);
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 3px solid var(--warning);
         }
 
         tr.strike-max {
-            background-color: rgba(234, 67, 53, 0.1);
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 3px solid var(--danger);
         }
 
         .acoes {
@@ -317,6 +371,7 @@
             overflow-y: auto;
             box-shadow: 0 5px 15px var(--shadow-color);
             position: relative;
+            border-top: 4px solid var(--secondary);
         }
 
         .close-modal {
@@ -326,6 +381,13 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--text-color);
+            background-color: var(--light-gray);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
         .close-modal:hover {
@@ -346,11 +408,24 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px var(--shadow-color);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--secondary);
         }
 
         .dashboard-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 102, 179, 0.2);
+        }
+
+        .dashboard-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        .dark-mode .dashboard-card h3 {
+            color: var(--secondary-light);
         }
 
         .chart-container {
@@ -368,6 +443,12 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .dark-mode .table-filters {
+            background-color: var(--card-bg);
+            border-color: var(--input-border);
         }
 
         /* Toast Notification */
@@ -376,7 +457,7 @@
             bottom: 20px;
             right: 20px;
             padding: 15px 25px;
-            background-color: var(--success);
+            background-color: var(--secondary);
             color: white;
             border-radius: 4px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -415,11 +496,13 @@
             background: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 2px 15px var(--shadow-color);
+            border-top: 4px solid var(--secondary);
         }
 
         .login-title {
             text-align: center;
             margin-bottom: 25px;
+            color: var(--primary);
         }
 
         .login-footer {
@@ -435,6 +518,12 @@
             padding: 20px;
             background-color: var(--light-gray);
             border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .dark-mode .backup-section {
+            background-color: var(--card-bg);
+            border-color: var(--input-border);
         }
 
         .backup-actions {
@@ -471,6 +560,29 @@
         #tabelaFornecedores th:nth-child(7) { width: 10%; }
         #tabelaFornecedores th:nth-child(8) { width: 10%; }
 
+        /* Estilos para o modal de backup */
+        .modal-content label[for] {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .modal-content input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        /* Ícones */
+        .fas {
+            color: var(--secondary);
+        }
+
+        .dark-mode .fas {
+            color: var(--secondary-light);
+        }
+
         /* Responsivo */
         @media (max-width: 768px) {
             .container {
@@ -480,6 +592,8 @@
             header {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 10px;
+                padding: 10px;
             }
             
             .dashboard {
@@ -698,28 +812,28 @@
             
             <div class="dashboard">
                 <div class="dashboard-card">
-                    <h3>Distribuição de Strikes</h3>
+                    <h3><i class="fas fa-chart-bar"></i> Distribuição de Strikes</h3>
                     <div class="chart-container">
                         <canvas id="strikesChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="dashboard-card">
-                    <h3>Fornecedores por Status</h3>
+                    <h3><i class="fas fa-chart-pie"></i> Fornecedores por Status</h3>
                     <div class="chart-container">
                         <canvas id="statusChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="dashboard-card">
-                    <h3>Top Locais com Strikes</h3>
+                    <h3><i class="fas fa-map-marked-alt"></i> Top Locais com Strikes</h3>
                     <div class="chart-container">
                         <canvas id="locaisChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="dashboard-card">
-                    <h3>Evolução Mensal</h3>
+                    <h3><i class="fas fa-chart-line"></i> Evolução Mensal</h3>
                     <div class="chart-container">
                         <canvas id="evolucaoChart"></canvas>
                     </div>
@@ -727,7 +841,7 @@
             </div>
             
             <div class="dashboard-card" style="margin-top: 20px;">
-                <h3>Resumo Estatístico</h3>
+                <h3><i class="fas fa-chart-area"></i> Resumo Estatístico</h3>
                 <div id="resumoEstatistico" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <!-- Preenchido via JavaScript -->
                 </div>
@@ -748,6 +862,12 @@
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <h2><i class="fas fa-database"></i> Restaurar Backup</h2>
+                
+                <div class="form-group">
+                    <label><input type="radio" name="backupMode" value="replace" checked> Substituir todos os dados</label>
+                    <label><input type="radio" name="backupMode" value="merge"> Manter e acrescentar</label>
+                </div>
+                
                 <div class="form-group">
                     <label for="backupData"><i class="fas fa-file-code"></i> Dados do Backup:</label>
                     <textarea id="backupData" rows="10" placeholder="Cole aqui os dados do backup"></textarea>
@@ -818,94 +938,169 @@
             // Gráficos
             let strikesChart, statusChart, locaisChart, evolucaoChart;
             
+            // =============================================
+            // FUNÇÕES DE TRATAMENTO DE ERROS
+            // =============================================
+            
+            function handleError(error, context = 'Operação') {
+                console.error(`${context} falhou:`, error);
+                
+                let message = 'Erro desconhecido';
+                if (error instanceof Error) message = error.message;
+                if (typeof error === 'string') message = error;
+                
+                showToast(`${context} falhou: ${message}`, 'error');
+                
+                // Exemplo: Enviar erro para um serviço de monitoramento (Sentry, etc.)
+                // if (window.Sentry) Sentry.captureException(error);
+            }
+            
+            function validarDadosBackup(data) {
+                if (!Array.isArray(data)) {
+                    throw new Error('Os dados devem ser um array de fornecedores');
+                }
+                
+                const requiredFields = ['id', 'nome', 'cnpj', 'strikes'];
+                const invalidItems = data.filter(item => 
+                    !requiredFields.every(field => field in item)
+                );
+                
+                if (invalidItems.length > 0) {
+                    throw new Error(`Dados corrompidos: ${invalidItems.length} itens com estrutura inválida`);
+                }
+                
+                return true;
+            }
+            
+            // =============================================
+            // FUNÇÕES PRINCIPAIS
+            // =============================================
+            
             // Verificar autenticação e modo escuro
             function checkAuth() {
-                if (isLoggedIn) {
-                    loginScreen.style.display = 'none';
-                    appContainer.style.display = 'block';
-                    renderizarTabela();
-                    
-                    // Verificar modo escuro
-                    const darkMode = localStorage.getItem('darkMode') === 'true';
-                    if (darkMode) {
-                        document.body.classList.add('dark-mode');
-                        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                        darkModeToggle.title = 'Modo Claro';
+                try {
+                    if (isLoggedIn) {
+                        loginScreen.style.display = 'none';
+                        appContainer.style.display = 'block';
+                        renderizarTabela();
+                        
+                        // Verificar modo escuro
+                        const darkMode = localStorage.getItem('darkMode') === 'true';
+                        if (darkMode) {
+                            document.body.classList.add('dark-mode');
+                            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                            darkModeToggle.title = 'Modo Claro';
+                        } else {
+                            darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                            darkModeToggle.title = 'Modo Escuro';
+                        }
+                    } else {
+                        loginScreen.style.display = 'block';
+                        appContainer.style.display = 'none';
                     }
-                } else {
-                    loginScreen.style.display = 'block';
-                    appContainer.style.display = 'none';
+                } catch (error) {
+                    handleError(error, 'Verificação de autenticação');
                 }
             }
             
             // Mostrar toast notification
             function showToast(message, type = 'success') {
-                toast.className = 'toast';
-                toast.classList.add(type);
-                toastMessage.textContent = message;
-                toast.classList.add('show');
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
+                try {
+                    toast.className = 'toast';
+                    toast.classList.add(type);
+                    toastMessage.textContent = message;
+                    toast.classList.add('show');
+                    
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 3000);
+                } catch (error) {
+                    console.error('Erro ao exibir toast:', error);
+                }
             }
             
             // Alternar modo escuro
             darkModeToggle.addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                localStorage.setItem('darkMode', isDarkMode);
-                darkModeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-                darkModeToggle.title = isDarkMode ? 'Modo Claro' : 'Modo Escuro';
-                
-                // Atualizar gráficos
-                updateChartTheme(strikesChart);
-                updateChartTheme(statusChart);
-                updateChartTheme(locaisChart);
-                updateChartTheme(evolucaoChart);
+                try {
+                    document.body.classList.toggle('dark-mode');
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    localStorage.setItem('darkMode', isDarkMode);
+                    
+                    if (isDarkMode) {
+                        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                        darkModeToggle.title = 'Modo Claro';
+                    } else {
+                        darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                        darkModeToggle.title = 'Modo Escuro';
+                    }
+                    
+                    // Atualizar gráficos
+                    updateChartTheme(strikesChart);
+                    updateChartTheme(statusChart);
+                    updateChartTheme(locaisChart);
+                    updateChartTheme(evolucaoChart);
+                } catch (error) {
+                    handleError(error, 'Alternância de modo escuro');
+                }
             });
             
             // Atualizar tema dos gráficos
             function updateChartTheme(chart) {
                 if (!chart) return;
                 
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                const textColor = isDarkMode ? '#e0e0e0' : '#666';
-                const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-                
-                chart.options.scales.x.grid.color = gridColor;
-                chart.options.scales.y.grid.color = gridColor;
-                chart.options.scales.x.ticks.color = textColor;
-                chart.options.scales.y.ticks.color = textColor;
-                
-                if (chart.options.plugins && chart.options.plugins.legend) {
-                    chart.options.plugins.legend.labels.color = textColor;
+                try {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    const textColor = isDarkMode ? '#e0e0e0' : '#666';
+                    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                    
+                    chart.options.scales.x.grid.color = gridColor;
+                    chart.options.scales.y.grid.color = gridColor;
+                    chart.options.scales.x.ticks.color = textColor;
+                    chart.options.scales.y.ticks.color = textColor;
+                    
+                    if (chart.options.plugins && chart.options.plugins.legend) {
+                        chart.options.plugins.legend.labels.color = textColor;
+                    }
+                    
+                    chart.update();
+                } catch (error) {
+                    handleError(error, 'Atualização de tema de gráfico');
                 }
-                
-                chart.update();
             }
             
             // Login
             btnLogin.addEventListener('click', function() {
-                const username = document.getElementById('loginUsername').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                if (username === 'admin' && password === 'admin123') {
-                    isLoggedIn = true;
-                    localStorage.setItem('isLoggedIn', 'true');
-                    checkAuth();
-                    showToast('Login realizado com sucesso!');
-                } else {
-                    showToast('Usuário ou senha incorretos!', 'error');
+                try {
+                    const username = document.getElementById('loginUsername').value;
+                    const password = document.getElementById('loginPassword').value;
+                    
+                    if (!username || !password) {
+                        throw new Error('Preencha usuário e senha');
+                    }
+                    
+                    if (username === 'admin' && password === 'admin123') {
+                        isLoggedIn = true;
+                        localStorage.setItem('isLoggedIn', 'true');
+                        checkAuth();
+                        showToast('Login realizado com sucesso!');
+                    } else {
+                        throw new Error('Credenciais inválidas');
+                    }
+                } catch (error) {
+                    handleError(error, 'Login');
                 }
             });
             
             // Logout
             btnLogout.addEventListener('click', function() {
-                isLoggedIn = false;
-                localStorage.removeItem('isLoggedIn');
-                checkAuth();
-                showToast('Você saiu do sistema');
+                try {
+                    isLoggedIn = false;
+                    localStorage.removeItem('isLoggedIn');
+                    checkAuth();
+                    showToast('Você saiu do sistema');
+                } catch (error) {
+                    handleError(error, 'Logout');
+                }
             });
             
             // Normalizar texto para comparação
@@ -917,19 +1112,23 @@
             
             // Máscara para CNPJ
             document.getElementById('cnpj').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                
-                if (value.length > 12) {
-                    value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
-                } else if (value.length > 8) {
-                    value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})$/, '$1.$2.$3/$4');
-                } else if (value.length > 5) {
-                    value = value.replace(/^(\d{2})(\d{3})(\d{3})$/, '$1.$2.$3');
-                } else if (value.length > 2) {
-                    value = value.replace(/^(\d{2})(\d{3})$/, '$1.$2');
+                try {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    if (value.length > 12) {
+                        value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+                    } else if (value.length > 8) {
+                        value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})$/, '$1.$2.$3/$4');
+                    } else if (value.length > 5) {
+                        value = value.replace(/^(\d{2})(\d{3})(\d{3})$/, '$1.$2.$3');
+                    } else if (value.length > 2) {
+                        value = value.replace(/^(\d{2})(\d{3})$/, '$1.$2');
+                    }
+                    
+                    e.target.value = value;
+                } catch (error) {
+                    handleError(error, 'Formatação de CNPJ');
                 }
-                
-                e.target.value = value;
             });
             
             // Formatar CNPJ para exibição
@@ -940,176 +1139,195 @@
             
             // Validar CNPJ
             function validarCNPJ(cnpj) {
-                cnpj = cnpj.replace(/[^\d]+/g,'');
-                
-                if (cnpj.length !== 14) return false;
-                if (/^(\d)\1{13}$/.test(cnpj)) return false;
-                
-                // Validação dos dígitos verificadores
-                let tamanho = cnpj.length - 2;
-                let numeros = cnpj.substring(0, tamanho);
-                let digitos = cnpj.substring(tamanho);
-                let soma = 0;
-                let pos = tamanho - 7;
-                
-                for (let i = tamanho; i >= 1; i--) {
-                    soma += numeros.charAt(tamanho - i) * pos--;
-                    if (pos < 2) pos = 9;
+                try {
+                    cnpj = cnpj.replace(/[^\d]+/g,'');
+                    
+                    if (cnpj.length !== 14) return false;
+                    if (/^(\d)\1{13}$/.test(cnpj)) return false;
+                    
+                    // Validação dos dígitos verificadores
+                    let tamanho = cnpj.length - 2;
+                    let numeros = cnpj.substring(0, tamanho);
+                    let digitos = cnpj.substring(tamanho);
+                    let soma = 0;
+                    let pos = tamanho - 7;
+                    
+                    for (let i = tamanho; i >= 1; i--) {
+                        soma += numeros.charAt(tamanho - i) * pos--;
+                        if (pos < 2) pos = 9;
+                    }
+                    
+                    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                    if (resultado != digitos.charAt(0)) return false;
+                    
+                    tamanho = tamanho + 1;
+                    numeros = cnpj.substring(0, tamanho);
+                    soma = 0;
+                    pos = tamanho - 7;
+                    
+                    for (let i = tamanho; i >= 1; i--) {
+                        soma += numeros.charAt(tamanho - i) * pos--;
+                        if (pos < 2) pos = 9;
+                    }
+                    
+                    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                    if (resultado != digitos.charAt(1)) return false;
+                    
+                    return true;
+                } catch (error) {
+                    handleError(error, 'Validação de CNPJ');
+                    return false;
                 }
-                
-                let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-                if (resultado != digitos.charAt(0)) return false;
-                
-                tamanho = tamanho + 1;
-                numeros = cnpj.substring(0, tamanho);
-                soma = 0;
-                pos = tamanho - 7;
-                
-                for (let i = tamanho; i >= 1; i--) {
-                    soma += numeros.charAt(tamanho - i) * pos--;
-                    if (pos < 2) pos = 9;
-                }
-                
-                resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-                if (resultado != digitos.charAt(1)) return false;
-                
-                return true;
             }
             
             // Adicionar observação
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                const nome = document.getElementById('fornecedor').value.trim();
-                const cnpj = document.getElementById('cnpj').value.replace(/\D/g, '');
-                const empresa = document.getElementById('empresa').value;
-                const local = document.getElementById('local').value.trim();
-                const mesAno = document.getElementById('mesAno').value;
-                const observacao = document.getElementById('observacao').value.trim();
-                
-                // Validações básicas
-                if (!nome || !cnpj || !empresa || !local || !mesAno || !observacao) {
-                    showToast('Preencha todos os campos obrigatórios!', 'error');
-                    return;
-                }
-                
-                if (!validarCNPJ(cnpj)) {
-                    showToast('CNPJ inválido!', 'error');
-                    return;
-                }
-                
-                // Formata MM-AAAA
-                const [ano, mes] = mesAno.split('-');
-                const mesAnoAtual = `${mes}-${ano}`;
-                
-                if (editandoId) {
-                    // Modo edição - atualiza o fornecedor existente
-                    const fornecedorIndex = fornecedores.findIndex(f => f.id === editandoId);
-                    if (fornecedorIndex !== -1) {
-                        fornecedores[fornecedorIndex].nome = nome;
-                        fornecedores[fornecedorIndex].cnpj = cnpj;
-                        fornecedores[fornecedorIndex].cnpjFormatado = formatarCNPJ(cnpj);
-                        fornecedores[fornecedorIndex].empresa = empresa;
-                        fornecedores[fornecedorIndex].local = local;
-                        
-                        // Limpa o modo de edição
-                        cancelarEdicao();
-                        showToast('Fornecedor atualizado com sucesso!');
-                    }
-                } else {
-                    // Modo cadastro - adiciona nova observação
+                try {
+                    const nome = document.getElementById('fornecedor').value.trim();
+                    const cnpj = document.getElementById('cnpj').value.replace(/\D/g, '');
+                    const empresa = document.getElementById('empresa').value;
+                    const local = document.getElementById('local').value.trim();
+                    const mesAno = document.getElementById('mesAno').value;
+                    const observacao = document.getElementById('observacao').value.trim();
                     
-                    // Verifica se já existe o fornecedor com o mesmo CNPJ
-                    let fornecedor = fornecedores.find(f => 
-                        normalizarTexto(f.cnpj) === normalizarTexto(cnpj)
-                    );
-                    
-                    if (!fornecedor) {
-                        fornecedor = {
-                            id: Date.now().toString(),
-                            nome,
-                            cnpj,
-                            cnpjFormatado: formatarCNPJ(cnpj),
-                            empresa,
-                            local,
-                            observacoes: [],
-                            strikes: 0,
-                            ultimoStrike: null
-                        };
-                        fornecedores.push(fornecedor);
-                        showToast('Novo fornecedor cadastrado com sucesso!');
-                    } else {
-                        showToast('Observação adicionada ao fornecedor existente');
+                    // Validações básicas
+                    if (!nome || !cnpj || !empresa || !local || !mesAno || !observacao) {
+                        throw new Error('Preencha todos os campos obrigatórios!');
                     }
                     
-                    // Adiciona observação
-                    const novaObs = {
-                        id: Date.now().toString(),
-                        data: new Date().toISOString(),
-                        mesAno: mesAnoAtual,
-                        descricao: observacao
-                    };
+                    if (!validarCNPJ(cnpj)) {
+                        throw new Error('CNPJ inválido!');
+                    }
                     
-                    fornecedor.observacoes.push(novaObs);
+                    // Formata MM-AAAA
+                    const [ano, mes] = mesAno.split('-');
+                    const mesAnoAtual = `${mes}-${ano}`;
                     
-                    // Verifica se é um novo strike (mês diferente do último)
-                    if (!fornecedor.ultimoStrike || fornecedor.ultimoStrike !== mesAnoAtual) {
-                        if (fornecedor.strikes < 3) {
-                            fornecedor.strikes += 1;
-                            fornecedor.ultimoStrike = mesAnoAtual;
+                    if (editandoId) {
+                        // Modo edição - atualiza o fornecedor existente
+                        const fornecedorIndex = fornecedores.findIndex(f => f.id === editandoId);
+                        if (fornecedorIndex !== -1) {
+                            fornecedores[fornecedorIndex].nome = nome;
+                            fornecedores[fornecedorIndex].cnpj = cnpj;
+                            fornecedores[fornecedorIndex].cnpjFormatado = formatarCNPJ(cnpj);
+                            fornecedores[fornecedorIndex].empresa = empresa;
+                            fornecedores[fornecedorIndex].local = local;
                             
-                            // Verifica se atingiu 3 strikes
-                            if (fornecedor.strikes === 3) {
-                                showToast(`ATENÇÃO: ${fornecedor.nome} atingiu 3 strikes e foi bloqueado!`, 'warning');
+                            // Limpa o modo de edição
+                            cancelarEdicao();
+                            showToast('Fornecedor atualizado com sucesso!');
+                        }
+                    } else {
+                        // Modo cadastro - adiciona nova observação
+                        
+                        // Verifica se já existe o fornecedor com o mesmo CNPJ
+                        let fornecedor = fornecedores.find(f => 
+                            normalizarTexto(f.cnpj) === normalizarTexto(cnpj)
+                        );
+                        
+                        if (!fornecedor) {
+                            fornecedor = {
+                                id: Date.now().toString(),
+                                nome,
+                                cnpj,
+                                cnpjFormatado: formatarCNPJ(cnpj),
+                                empresa,
+                                local,
+                                observacoes: [],
+                                strikes: 0,
+                                ultimoStrike: null
+                            };
+                            fornecedores.push(fornecedor);
+                            showToast('Novo fornecedor cadastrado com sucesso!');
+                        } else {
+                            showToast('Observação adicionada ao fornecedor existente');
+                        }
+                        
+                        // Adiciona observação
+                        const novaObs = {
+                            id: Date.now().toString(),
+                            data: new Date().toISOString(),
+                            mesAno: mesAnoAtual,
+                            descricao: observacao
+                        };
+                        
+                        fornecedor.observacoes.push(novaObs);
+                        
+                        // Verifica se é um novo strike (mês diferente do último)
+                        if (!fornecedor.ultimoStrike || fornecedor.ultimoStrike !== mesAnoAtual) {
+                            if (fornecedor.strikes < 3) {
+                                fornecedor.strikes += 1;
+                                fornecedor.ultimoStrike = mesAnoAtual;
+                                
+                                // Verifica se atingiu 3 strikes
+                                if (fornecedor.strikes === 3) {
+                                    showToast(`ATENÇÃO: ${fornecedor.nome} atingiu 3 strikes e foi bloqueado!`, 'warning');
+                                }
                             }
                         }
                     }
+                    
+                    // Salva no localStorage
+                    localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
+                    
+                    // Atualiza as tabelas e gráficos
+                    renderizarTabela();
+                    atualizarDashboard();
+                    
+                    // Limpa o formulário
+                    form.reset();
+                } catch (error) {
+                    handleError(error, 'Cadastro de fornecedor');
                 }
-                
-                // Salva no localStorage
-                localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
-                
-                // Atualiza as tabelas e gráficos
-                renderizarTabela();
-                atualizarDashboard();
-                
-                // Limpa o formulário
-                form.reset();
             });
             
             // Cancelar edição
             function cancelarEdicao() {
-                editandoId = null;
-                form.reset();
-                btnSalvar.innerHTML = '<i class="fas fa-save"></i> Registrar Observação';
-                btnCancelar.style.display = 'none';
+                try {
+                    editandoId = null;
+                    form.reset();
+                    btnSalvar.innerHTML = '<i class="fas fa-save"></i> Registrar Observação';
+                    btnCancelar.style.display = 'none';
+                } catch (error) {
+                    handleError(error, 'Cancelamento de edição');
+                }
             }
             
             btnCancelar.addEventListener('click', cancelarEdicao);
             
             // Editar fornecedor
             function editarFornecedor(id) {
-                const fornecedor = fornecedores.find(f => f.id === id);
-                if (!fornecedor) return;
-                
-                // Preenche o formulário com os dados do fornecedor
-                document.getElementById('fornecedor').value = fornecedor.nome;
-                document.getElementById('cnpj').value = fornecedor.cnpjFormatado;
-                document.getElementById('empresa').value = fornecedor.empresa;
-                document.getElementById('local').value = fornecedor.local;
-                
-                // Ativa o modo de edição
-                editandoId = id;
-                btnSalvar.innerHTML = '<i class="fas fa-save"></i> Atualizar Fornecedor';
-                btnCancelar.style.display = 'inline-flex';
-                
-                // Rola para o formulário
-                document.getElementById('fornecedor').focus();
+                try {
+                    const fornecedor = fornecedores.find(f => f.id === id);
+                    if (!fornecedor) throw new Error('Fornecedor não encontrado');
+                    
+                    // Preenche o formulário com os dados do fornecedor
+                    document.getElementById('fornecedor').value = fornecedor.nome;
+                    document.getElementById('cnpj').value = fornecedor.cnpjFormatado;
+                    document.getElementById('empresa').value = fornecedor.empresa;
+                    document.getElementById('local').value = fornecedor.local;
+                    
+                    // Ativa o modo de edição
+                    editandoId = id;
+                    btnSalvar.innerHTML = '<i class="fas fa-save"></i> Atualizar Fornecedor';
+                    btnCancelar.style.display = 'inline-flex';
+                    
+                    // Rola para o formulário
+                    document.getElementById('fornecedor').focus();
+                } catch (error) {
+                    handleError(error, 'Edição de fornecedor');
+                }
             }
             
             // Excluir fornecedor
             function excluirFornecedor(id) {
-                if (confirm('Tem certeza que deseja excluir este fornecedor e todas suas observações?\n\nEsta ação não pode ser desfeita!')) {
+                try {
+                    if (!confirm('Tem certeza que deseja excluir este fornecedor e todas suas observações?\n\nEsta ação não pode ser desfeita!')) {
+                        return;
+                    }
+                    
                     fornecedores = fornecedores.filter(f => f.id !== id);
                     localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
                     
@@ -1121,587 +1339,642 @@
                     renderizarTabela();
                     atualizarDashboard();
                     showToast('Fornecedor excluído com sucesso!');
+                } catch (error) {
+                    handleError(error, 'Exclusão de fornecedor');
                 }
             }
             
             // Renderizar tabela principal
             function renderizarTabela() {
-                tabela.innerHTML = '';
-                
-                const filtroNome = normalizarTexto(filtroFornecedor.value);
-                const filtroLocalText = normalizarTexto(filtroLocal.value);
-                const filtroEmpresaValue = filtroEmpresa.value;
-                const filtroStatusValue = filtroStatus.value;
-                
-                // Ordena por número de strikes (decrescente)
-                fornecedores.sort((a, b) => b.strikes - a.strikes);
-                
-                fornecedores.forEach(fornecedor => {
-                    // Aplica filtros
-                    if (filtroNome && !normalizarTexto(fornecedor.nome).includes(filtroNome)) {
-                        return;
-                    }
+                try {
+                    tabela.innerHTML = '';
                     
-                    if (filtroLocalText && !normalizarTexto(fornecedor.local).includes(filtroLocalText)) {
-                        return;
-                    }
+                    const filtroNome = normalizarTexto(filtroFornecedor.value);
+                    const filtroLocalText = normalizarTexto(filtroLocal.value);
+                    const filtroEmpresaValue = filtroEmpresa.value;
+                    const filtroStatusValue = filtroStatus.value;
                     
-                    if (filtroEmpresaValue !== 'todos' && fornecedor.empresa !== filtroEmpresaValue) {
-                        return;
-                    }
+                    // Ordena por número de strikes (decrescente)
+                    fornecedores.sort((a, b) => b.strikes - a.strikes);
                     
-                    if (filtroStatusValue !== 'todos') {
-                        if (filtroStatusValue === 'ok' && fornecedor.strikes !== 0) {
+                    fornecedores.forEach(fornecedor => {
+                        // Aplica filtros
+                        if (filtroNome && !normalizarTexto(fornecedor.nome).includes(filtroNome)) {
                             return;
                         }
-                        if (filtroStatusValue === 'atencao' && (fornecedor.strikes === 0 || fornecedor.strikes >= 3)) {
+                        
+                        if (filtroLocalText && !normalizarTexto(fornecedor.local).includes(filtroLocalText)) {
                             return;
                         }
-                        if (filtroStatusValue === 'bloqueado' && fornecedor.strikes < 3) {
+                        
+                        if (filtroEmpresaValue !== 'todos' && fornecedor.empresa !== filtroEmpresaValue) {
                             return;
                         }
-                    }
-                    
-                    const tr = document.createElement('tr');
-                    
-                    // Estilo baseado nos strikes
-                    if (fornecedor.strikes >= 3) {
-                        tr.classList.add('strike-max');
-                    } else if (fornecedor.strikes > 0) {
-                        tr.classList.add('strike-warning');
-                    }
-                    
-                    // Adiciona data-label para responsividade
-                    tr.innerHTML = `
-                        <td data-label="Fornecedor">${fornecedor.nome}</td>
-                        <td data-label="CNPJ">${fornecedor.cnpjFormatado}</td>
-                        <td data-label="Local">${fornecedor.local}</td>
-                        <td data-label="Empresa">${fornecedor.empresa}</td>
-                        <td data-label="Strikes">${fornecedor.strikes}/3</td>
-                        <td data-label="Último Strike">${fornecedor.ultimoStrike || 'Nenhum'}</td>
-                        <td data-label="Status">
-                            ${fornecedor.strikes >= 3 
-                                ? '<span class="status-badge danger">Bloqueado</span>' 
-                                : fornecedor.strikes > 0 
-                                    ? '<span class="status-badge warning">Atenção</span>' 
-                                    : '<span class="status-badge success">OK</span>'}
-                        </td>
-                        <td data-label="Ações" class="acoes">
-                            <button class="btn-editar" data-id="${fornecedor.id}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-excluir" data-id="${fornecedor.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <button class="btn-detalhes" data-id="${fornecedor.id}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    `;
-                    
-                    tabela.appendChild(tr);
-                });
-                
-                // Adiciona eventos aos botões
-                document.querySelectorAll('.btn-editar').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        editarFornecedor(e.currentTarget.dataset.id);
+                        
+                        if (filtroStatusValue !== 'todos') {
+                            if (filtroStatusValue === 'ok' && fornecedor.strikes !== 0) {
+                                return;
+                            }
+                            if (filtroStatusValue === 'atencao' && (fornecedor.strikes === 0 || fornecedor.strikes >= 3)) {
+                                return;
+                            }
+                            if (filtroStatusValue === 'bloqueado' && fornecedor.strikes < 3) {
+                                return;
+                            }
+                        }
+                        
+                        const tr = document.createElement('tr');
+                        
+                        // Estilo baseado nos strikes
+                        if (fornecedor.strikes >= 3) {
+                            tr.classList.add('strike-max');
+                        } else if (fornecedor.strikes > 0) {
+                            tr.classList.add('strike-warning');
+                        }
+                        
+                        // Adiciona data-label para responsividade
+                        tr.innerHTML = `
+                            <td data-label="Fornecedor">${fornecedor.nome}</td>
+                            <td data-label="CNPJ">${fornecedor.cnpjFormatado}</td>
+                            <td data-label="Local">${fornecedor.local}</td>
+                            <td data-label="Empresa">${fornecedor.empresa}</td>
+                            <td data-label="Strikes">${fornecedor.strikes}/3</td>
+                            <td data-label="Último Strike">${fornecedor.ultimoStrike || 'Nenhum'}</td>
+                            <td data-label="Status">
+                                ${fornecedor.strikes >= 3 
+                                    ? '<span class="status-badge danger">Bloqueado</span>' 
+                                    : fornecedor.strikes > 0 
+                                        ? '<span class="status-badge warning">Atenção</span>' 
+                                        : '<span class="status-badge success">OK</span>'}
+                            </td>
+                            <td data-label="Ações" class="acoes">
+                                <button class="btn-editar" data-id="${fornecedor.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-excluir" data-id="${fornecedor.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="btn-detalhes" data-id="${fornecedor.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        `;
+                        
+                        tabela.appendChild(tr);
                     });
-                });
-                
-                document.querySelectorAll('.btn-excluir').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        excluirFornecedor(e.currentTarget.dataset.id);
+                    
+                    // Adiciona eventos aos botões
+                    document.querySelectorAll('.btn-editar').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            editarFornecedor(e.currentTarget.dataset.id);
+                        });
                     });
-                });
-                
-                document.querySelectorAll('.btn-detalhes').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        mostrarDetalhes(e.currentTarget.dataset.id);
+                    
+                    document.querySelectorAll('.btn-excluir').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            excluirFornecedor(e.currentTarget.dataset.id);
+                        });
                     });
-                });
+                    
+                    document.querySelectorAll('.btn-detalhes').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            mostrarDetalhes(e.currentTarget.dataset.id);
+                        });
+                    });
+                } catch (error) {
+                    handleError(error, 'Renderização da tabela');
+                }
             }
             
             // Mostrar detalhes do fornecedor (apenas strikes)
             function mostrarDetalhes(id) {
-                const fornecedor = fornecedores.find(f => f.id === id);
-                if (!fornecedor) return;
-                
-                modalTitulo.textContent = `Detalhes: ${fornecedor.nome} - ${fornecedor.local}`;
-                
-                let html = `
-                    <div class="info-fornecedor">
-                        <p><strong>CNPJ:</strong> ${fornecedor.cnpjFormatado}</p>
-                        <p><strong>Empresa:</strong> ${fornecedor.empresa}</p>
-                        <p><strong>Total Strikes:</strong> ${fornecedor.strikes}/3</p>
-                        <p><strong>Último Strike:</strong> ${fornecedor.ultimoStrike || 'Nenhum'}</p>
-                    </div>
+                try {
+                    const fornecedor = fornecedores.find(f => f.id === id);
+                    if (!fornecedor) throw new Error('Fornecedor não encontrado');
                     
-                    <h3><i class="fas fa-history"></i> Histórico de Strikes</h3>
-                    <div class="table-responsive">
-                        <table class="tabela-detalhes">
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Mês/Ano</th>
-                                    <th>Observação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-                
-                // Filtrar apenas observações que resultaram em strikes
-                const strikesObservacoes = [];
-                const mesesComStrike = new Set();
-                
-                // Ordenar observações por data (mais recente primeiro)
-                const observacoesOrdenadas = [...fornecedor.observacoes].sort((a, b) => 
-                    new Date(b.data) - new Date(a.data)
-                );
-                
-                // Identificar quais observações geraram strikes (uma por mês)
-                observacoesOrdenadas.forEach(obs => {
-                    if (!mesesComStrike.has(obs.mesAno)) {
-                        strikesObservacoes.push(obs);
-                        mesesComStrike.add(obs.mesAno);
-                    }
-                });
-                
-                // Exibir apenas as observações que geraram strikes
-                strikesObservacoes.forEach(obs => {
-                    const data = new Date(obs.data);
-                    html += `
-                        <tr>
-                            <td>${data.toLocaleDateString('pt-BR')}</td>
-                            <td>${obs.mesAno}</td>
-                            <td>${obs.descricao}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-                
-                modalConteudo.innerHTML = html;
-                modal.style.display = 'flex';
-            }
-
-            // Modal para mostrar fornecedores filtrados
-            function mostrarFornecedoresModal(fornecedoresFiltrados, titulo) {
-                modalFornecedoresTitulo.textContent = titulo;
-                
-                if (fornecedoresFiltrados.length === 0) {
-                    modalFornecedoresConteudo.innerHTML = '<p>Nenhum fornecedor encontrado</p>';
-                } else {
+                    modalTitulo.textContent = `Detalhes: ${fornecedor.nome} - ${fornecedor.local}`;
+                    
                     let html = `
-                        <div style="margin-bottom: 15px;">
-                            <p><strong>Total:</strong> ${fornecedoresFiltrados.length} fornecedores</p>
+                        <div class="info-fornecedor">
+                            <p><strong>CNPJ:</strong> ${fornecedor.cnpjFormatado}</p>
+                            <p><strong>Empresa:</strong> ${fornecedor.empresa}</p>
+                            <p><strong>Total Strikes:</strong> ${fornecedor.strikes}/3</p>
+                            <p><strong>Último Strike:</strong> ${fornecedor.ultimoStrike || 'Nenhum'}</p>
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Fornecedor</th>
-                                    <th>Empresa</th>
-                                    <th>Local</th>
-                                    <th>Strikes</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        
+                        <h3><i class="fas fa-history"></i> Histórico de Strikes</h3>
+                        <div class="table-responsive">
+                            <table class="tabela-detalhes">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Mês/Ano</th>
+                                        <th>Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                     `;
                     
-                    fornecedoresFiltrados.forEach(fornecedor => {
+                    // Filtrar apenas observações que resultaram em strikes
+                    const strikesObservacoes = [];
+                    const mesesComStrike = new Set();
+                    
+                    // Ordenar observações por data (mais recente primeiro)
+                    const observacoesOrdenadas = [...fornecedor.observacoes].sort((a, b) => 
+                        new Date(b.data) - new Date(a.data)
+                    );
+                    
+                    // Identificar quais observações geraram strikes (uma por mês)
+                    observacoesOrdenadas.forEach(obs => {
+                        if (!mesesComStrike.has(obs.mesAno)) {
+                            strikesObservacoes.push(obs);
+                            mesesComStrike.add(obs.mesAno);
+                        }
+                    });
+                    
+                    // Exibir apenas as observações que geraram strikes
+                    strikesObservacoes.forEach(obs => {
+                        const data = new Date(obs.data);
                         html += `
                             <tr>
-                                <td>${fornecedor.nome}</td>
-                                <td>${fornecedor.empresa}</td>
-                                <td>${fornecedor.local}</td>
-                                <td>${fornecedor.strikes}</td>
-                                <td>
-                                    ${fornecedor.strikes >= 3 
-                                        ? '<span class="status-badge danger">Bloqueado</span>' 
-                                        : fornecedor.strikes > 0 
-                                            ? '<span class="status-badge warning">Atenção</span>' 
-                                            : '<span class="status-badge success">OK</span>'}
-                                </td>
+                                <td>${data.toLocaleDateString('pt-BR')}</td>
+                                <td>${obs.mesAno}</td>
+                                <td>${obs.descricao}</td>
                             </tr>
                         `;
                     });
                     
                     html += `
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     `;
                     
-                    modalFornecedoresConteudo.innerHTML = html;
+                    modalConteudo.innerHTML = html;
+                    modal.style.display = 'flex';
+                } catch (error) {
+                    handleError(error, 'Exibição de detalhes');
                 }
-                
-                modalFornecedores.style.display = 'flex';
+            }
+
+            // Modal para mostrar fornecedores filtrados
+            function mostrarFornecedoresModal(fornecedoresFiltrados, titulo) {
+                try {
+                    modalFornecedoresTitulo.textContent = titulo;
+                    
+                    if (fornecedoresFiltrados.length === 0) {
+                        modalFornecedoresConteudo.innerHTML = '<p>Nenhum fornecedor encontrado</p>';
+                    } else {
+                        let html = `
+                            <div style="margin-bottom: 15px;">
+                                <p><strong>Total:</strong> ${fornecedoresFiltrados.length} fornecedores</p>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Fornecedor</th>
+                                        <th>Empresa</th>
+                                        <th>Local</th>
+                                        <th>Strikes</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        
+                        fornecedoresFiltrados.forEach(fornecedor => {
+                            html += `
+                                <tr>
+                                    <td>${fornecedor.nome}</td>
+                                    <td>${fornecedor.empresa}</td>
+                                    <td>${fornecedor.local}</td>
+                                    <td>${fornecedor.strikes}</td>
+                                    <td>
+                                        ${fornecedor.strikes >= 3 
+                                            ? '<span class="status-badge danger">Bloqueado</span>' 
+                                            : fornecedor.strikes > 0 
+                                                ? '<span class="status-badge warning">Atenção</span>' 
+                                                : '<span class="status-badge success">OK</span>'}
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        html += `
+                                </tbody>
+                            </table>
+                        `;
+                        
+                        modalFornecedoresConteudo.innerHTML = html;
+                    }
+                    
+                    modalFornecedores.style.display = 'flex';
+                } catch (error) {
+                    handleError(error, 'Exibição de fornecedores filtrados');
+                }
             }
 
             // Configurar gráfico com interações
             function configurarGrafico(ctx, type, data, options) {
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                const textColor = isDarkMode ? '#e0e0e0' : '#666';
-                const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-                
-                const defaultOptions = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: {
-                                color: gridColor
+                try {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    const textColor = isDarkMode ? '#e0e0e0' : '#666';
+                    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                    
+                    const defaultOptions = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: textColor
+                                }
                             },
-                            ticks: {
-                                color: textColor
+                            y: {
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: textColor
+                                },
+                                beginAtZero: true
                             }
                         },
-                        y: {
-                            grid: {
-                                color: gridColor
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: textColor
+                                }
                             },
-                            ticks: {
-                                color: textColor
-                            },
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: textColor
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                afterLabel: function(context) {
-                                    if (context.dataset.extraData && context.dataset.extraData[context.dataIndex]) {
-                                        return context.dataset.extraData[context.dataIndex];
+                            tooltip: {
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        if (context.dataset.extraData && context.dataset.extraData[context.dataIndex]) {
+                                            return context.dataset.extraData[context.dataIndex];
+                                        }
+                                        return '';
                                     }
-                                    return '';
+                                }
+                            }
+                        },
+                        onClick: function(evt, elements) {
+                            if (elements.length > 0) {
+                                const element = elements[0];
+                                const datasetIndex = element.datasetIndex;
+                                const dataIndex = element.index;
+                                
+                                const chart = this;
+                                const dataset = chart.data.datasets[datasetIndex];
+                                const label = chart.data.labels[dataIndex];
+                                const value = dataset.data[dataIndex];
+                                
+                                let filtrados = [];
+                                let titulo = '';
+                                
+                                if (chart.canvas.id === 'strikesChart') {
+                                    const strikes = dataIndex;
+                                    filtrados = fornecedores.filter(f => f.strikes === strikes);
+                                    titulo = `Fornecedores com ${strikes} ${strikes === 1 ? 'Strike' : 'Strikes'}`;
+                                } else if (chart.canvas.id === 'statusChart') {
+                                    const status = ['OK', 'Atenção', 'Bloqueado'][dataIndex];
+                                    filtrados = fornecedores.filter(f => 
+                                        (status === 'OK' && f.strikes === 0) ||
+                                        (status === 'Atenção' && (f.strikes === 1 || f.strikes === 2)) ||
+                                        (status === 'Bloqueado' && f.strikes >= 3)
+                                    );
+                                    titulo = `Fornecedores com Status: ${status}`;
+                                } else if (chart.canvas.id === 'locaisChart') {
+                                    const local = label;
+                                    filtrados = fornecedores.filter(f => f.local === local && f.strikes > 0);
+                                    titulo = `Fornecedores com strikes em ${local}`;
+                                }
+                                
+                                if (filtrados.length > 0) {
+                                    mostrarFornecedoresModal(filtrados, titulo);
                                 }
                             }
                         }
-                    },
-                    onClick: function(evt, elements) {
-                        if (elements.length > 0) {
-                            const element = elements[0];
-                            const datasetIndex = element.datasetIndex;
-                            const dataIndex = element.index;
-                            
-                            const chart = this;
-                            const dataset = chart.data.datasets[datasetIndex];
-                            const label = chart.data.labels[dataIndex];
-                            const value = dataset.data[dataIndex];
-                            
-                            let filtrados = [];
-                            let titulo = '';
-                            
-                            if (chart.canvas.id === 'strikesChart') {
-                                const strikes = dataIndex;
-                                filtrados = fornecedores.filter(f => f.strikes === strikes);
-                                titulo = `Fornecedores com ${strikes} ${strikes === 1 ? 'Strike' : 'Strikes'}`;
-                            } else if (chart.canvas.id === 'statusChart') {
-                                const status = ['OK', 'Atenção', 'Bloqueado'][dataIndex];
-                                filtrados = fornecedores.filter(f => 
-                                    (status === 'OK' && f.strikes === 0) ||
-                                    (status === 'Atenção' && (f.strikes === 1 || f.strikes === 2)) ||
-                                    (status === 'Bloqueado' && f.strikes >= 3)
-                                );
-                                titulo = `Fornecedores com Status: ${status}`;
-                            } else if (chart.canvas.id === 'locaisChart') {
-                                const local = label;
-                                filtrados = fornecedores.filter(f => f.local === local && f.strikes > 0);
-                                titulo = `Fornecedores com strikes em ${local}`;
-                            }
-                            
-                            if (filtrados.length > 0) {
-                                mostrarFornecedoresModal(filtrados, titulo);
-                            }
-                        }
-                    }
-                };
-                
-                return new Chart(ctx, {
-                    type: type,
-                    data: data,
-                    options: {...defaultOptions, ...options}
-                });
+                    };
+                    
+                    return new Chart(ctx, {
+                        type: type,
+                        data: data,
+                        options: {...defaultOptions, ...options}
+                    });
+                } catch (error) {
+                    handleError(error, 'Configuração de gráfico');
+                    return null;
+                }
             }
 
             // Atualizar dashboard
             function atualizarDashboard() {
-                // Dados para os gráficos
-                const strikesCount = [0, 0, 0, 0]; // 0, 1, 2, 3 strikes
-                const statusCount = [0, 0, 0]; // OK, Atenção, Bloqueado
-                const locaisCount = {};
-                const evolucaoData = {};
-                
-                fornecedores.forEach(fornecedor => {
-                    // Contagem de strikes
-                    strikesCount[Math.min(fornecedor.strikes, 3)]++;
+                try {
+                    // Dados para os gráficos
+                    const strikesCount = [0, 0, 0, 0]; // 0, 1, 2, 3 strikes
+                    const statusCount = [0, 0, 0]; // OK, Atenção, Bloqueado
+                    const locaisCount = {};
+                    const evolucaoData = {};
                     
-                    // Contagem por status
-                    if (fornecedor.strikes >= 3) {
-                        statusCount[2]++;
-                    } else if (fornecedor.strikes > 0) {
-                        statusCount[1]++;
-                    } else {
-                        statusCount[0]++;
-                    }
-                    
-                    // Contagem por local
-                    if (fornecedor.strikes > 0) {
-                        if (!locaisCount[fornecedor.local]) {
-                            locaisCount[fornecedor.local] = 0;
+                    fornecedores.forEach(fornecedor => {
+                        // Contagem de strikes
+                        strikesCount[Math.min(fornecedor.strikes, 3)]++;
+                        
+                        // Contagem por status
+                        if (fornecedor.strikes >= 3) {
+                            statusCount[2]++;
+                        } else if (fornecedor.strikes > 0) {
+                            statusCount[1]++;
+                        } else {
+                            statusCount[0]++;
                         }
-                        locaisCount[fornecedor.local] += fornecedor.strikes;
-                    }
-                    
-                    // Evolução mensal
-                    fornecedor.observacoes.forEach(obs => {
-                        if (!evolucaoData[obs.mesAno]) {
-                            evolucaoData[obs.mesAno] = 0;
+                        
+                        // Contagem por local
+                        if (fornecedor.strikes > 0) {
+                            if (!locaisCount[fornecedor.local]) {
+                                locaisCount[fornecedor.local] = 0;
+                            }
+                            locaisCount[fornecedor.local] += fornecedor.strikes;
                         }
-                        evolucaoData[obs.mesAno]++;
+                        
+                        // Evolução mensal
+                        fornecedor.observacoes.forEach(obs => {
+                            if (!evolucaoData[obs.mesAno]) {
+                                evolucaoData[obs.mesAno] = 0;
+                            }
+                            evolucaoData[obs.mesAno]++;
+                        });
                     });
-                });
-                
-                // Top 5 locais com mais strikes
-                const topLocais = Object.entries(locaisCount)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-                
-                // Ordenar evolução mensal
-                const evolucaoOrdenada = Object.entries(evolucaoData)
-                    .sort((a, b) => a[0].localeCompare(b[0]));
-                
-                // Destruir gráficos existentes
-                if (strikesChart) strikesChart.destroy();
-                if (statusChart) statusChart.destroy();
-                if (locaisChart) locaisChart.destroy();
-                if (evolucaoChart) evolucaoChart.destroy();
-                
-                // Gráfico de distribuição de strikes
-                const strikesCtx = document.getElementById('strikesChart').getContext('2d');
-                strikesChart = configurarGrafico(strikesCtx, 'bar', {
-                    labels: ['0 Strikes', '1 Strike', '2 Strikes', '3 Strikes'],
-                    datasets: [{
-                        label: 'Quantidade de Fornecedores',
-                        data: strikesCount,
-                        backgroundColor: [
-                            '#34a853',
-                            '#fbbc05',
-                            '#fbbc05',
-                            '#ea4335'
-                        ],
-                        borderWidth: 1,
-                        extraData: strikesCount.map((count, index) => {
-                            const fornecedoresComStrike = fornecedores.filter(f => f.strikes === index);
-                            const empresas = {};
-                            fornecedoresComStrike.forEach(f => {
-                                empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
-                            });
-                            return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
-                        })
-                    }]
-                });
+                    
+                    // Top 5 locais com mais strikes
+                    const topLocais = Object.entries(locaisCount)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5);
+                    
+                    // Ordenar evolução mensal
+                    const evolucaoOrdenada = Object.entries(evolucaoData)
+                        .sort((a, b) => a[0].localeCompare(b[0]));
+                    
+                    // Destruir gráficos existentes
+                    if (strikesChart) strikesChart.destroy();
+                    if (statusChart) statusChart.destroy();
+                    if (locaisChart) locaisChart.destroy();
+                    if (evolucaoChart) evolucaoChart.destroy();
+                    
+                    // Gráfico de distribuição de strikes
+                    const strikesCtx = document.getElementById('strikesChart').getContext('2d');
+                    strikesChart = configurarGrafico(strikesCtx, 'bar', {
+                        labels: ['0 Strikes', '1 Strike', '2 Strikes', '3 Strikes'],
+                        datasets: [{
+                            label: 'Quantidade de Fornecedores',
+                            data: strikesCount,
+                            backgroundColor: [
+                                '#009a44', // Verde
+                                '#ffc107', // Amarelo
+                                '#ff9800', // Laranja
+                                '#dc3545'  // Vermelho
+                            ],
+                            borderWidth: 1,
+                            extraData: strikesCount.map((count, index) => {
+                                const fornecedoresComStrike = fornecedores.filter(f => f.strikes === index);
+                                const empresas = {};
+                                fornecedoresComStrike.forEach(f => {
+                                    empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
+                                });
+                                return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
+                            })
+                        }]
+                    });
 
-                // Gráfico de status
-                const statusCtx = document.getElementById('statusChart').getContext('2d');
-                statusChart = configurarGrafico(statusCtx, 'pie', {
-                    labels: ['OK', 'Atenção', 'Bloqueado'],
-                    datasets: [{
-                        data: statusCount,
-                        backgroundColor: [
-                            '#34a853',
-                            '#fbbc05',
-                            '#ea4335'
-                        ],
-                        borderWidth: 1,
-                        extraData: statusCount.map((count, index) => {
-                            const status = ['OK', 'Atenção', 'Bloqueado'][index];
-                            const fornecedoresStatus = fornecedores.filter(f => 
-                                (status === 'OK' && f.strikes === 0) ||
-                                (status === 'Atenção' && (f.strikes === 1 || f.strikes === 2)) ||
-                                (status === 'Bloqueado' && f.strikes >= 3)
-                            );
-                            const empresas = {};
-                            fornecedoresStatus.forEach(f => {
-                                empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
-                            });
-                            return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
-                        })
-                    }]
-                });
+                    // Gráfico de status
+                    const statusCtx = document.getElementById('statusChart').getContext('2d');
+                    statusChart = configurarGrafico(statusCtx, 'pie', {
+                        labels: ['OK', 'Atenção', 'Bloqueado'],
+                        datasets: [{
+                            data: statusCount,
+                            backgroundColor: [
+                                '#009a44', // Verde
+                                '#ffc107', // Amarelo
+                                '#dc3545'  // Vermelho
+                            ],
+                            borderWidth: 1,
+                            extraData: statusCount.map((count, index) => {
+                                const status = ['OK', 'Atenção', 'Bloqueado'][index];
+                                const fornecedoresStatus = fornecedores.filter(f => 
+                                    (status === 'OK' && f.strikes === 0) ||
+                                    (status === 'Atenção' && (f.strikes === 1 || f.strikes === 2)) ||
+                                    (status === 'Bloqueado' && f.strikes >= 3)
+                                );
+                                const empresas = {};
+                                fornecedoresStatus.forEach(f => {
+                                    empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
+                                });
+                                return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
+                            })
+                        }]
+                    });
 
-                // Gráfico de locais
-                const locaisCtx = document.getElementById('locaisChart').getContext('2d');
-                locaisChart = configurarGrafico(locaisCtx, 'bar', {
-                    labels: topLocais.map(m => m[0]),
-                    datasets: [{
-                        label: 'Total de Strikes',
-                        data: topLocais.map(m => m[1]),
-                        backgroundColor: '#4285f4',
-                        borderWidth: 1,
-                        extraData: topLocais.map(local => {
-                            const fornecedoresLocal = fornecedores.filter(f => f.local === local[0] && f.strikes > 0);
-                            const empresas = {};
-                            fornecedoresLocal.forEach(f => {
-                                empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
-                            });
-                            return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
-                        })
-                    }]
-                });
+                    // Gráfico de locais
+                    const locaisCtx = document.getElementById('locaisChart').getContext('2d');
+                    locaisChart = configurarGrafico(locaisCtx, 'bar', {
+                        labels: topLocais.map(m => m[0]),
+                        datasets: [{
+                            label: 'Total de Strikes',
+                            data: topLocais.map(m => m[1]),
+                            backgroundColor: '#0066b3', // Azul Eletrobras
+                            borderWidth: 1,
+                            extraData: topLocais.map(local => {
+                                const fornecedoresLocal = fornecedores.filter(f => f.local === local[0] && f.strikes > 0);
+                                const empresas = {};
+                                fornecedoresLocal.forEach(f => {
+                                    empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
+                                });
+                                return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
+                            })
+                        }]
+                    });
 
-                // Gráfico de evolução mensal
-                const evolucaoCtx = document.getElementById('evolucaoChart').getContext('2d');
-                evolucaoChart = configurarGrafico(evolucaoCtx, 'line', {
-                    labels: evolucaoOrdenada.map(e => e[0]),
-                    datasets: [{
-                        label: 'Observações por Mês',
-                        data: evolucaoOrdenada.map(e => e[1]),
-                        borderColor: '#4285f4',
-                        backgroundColor: 'rgba(66, 133, 244, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        extraData: evolucaoOrdenada.map(mes => {
-                            const fornecedoresMes = fornecedores.filter(f => 
-                                f.observacoes.some(obs => obs.mesAno === mes[0])
-                            );
-                            const empresas = {};
-                            fornecedoresMes.forEach(f => {
-                                empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
-                            });
-                            return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
-                        })
-                    }]
-                });
-                
-                // Atualizar resumo estatístico
-                const resumoEstatistico = document.getElementById('resumoEstatistico');
-                resumoEstatistico.innerHTML = `
-                    <div class="stat-card">
-                        <h4>Total Fornecedores</h4>
-                        <p>${fornecedores.length}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Fornecedores OK</h4>
-                        <p>${statusCount[0]}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Em Atenção</h4>
-                        <p>${statusCount[1]}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Bloqueados</h4>
-                        <p>${statusCount[2]}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Total Strikes</h4>
-                        <p>${fornecedores.reduce((sum, f) => sum + f.strikes, 0)}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Média Strikes/Fornecedor</h4>
-                        <p>${fornecedores.length > 0 ? (fornecedores.reduce((sum, f) => sum + f.strikes, 0) / fornecedores.length).toFixed(2) : 0}</p>
-                    </div>
-                `;
+                    // Gráfico de evolução mensal
+                    const evolucaoCtx = document.getElementById('evolucaoChart').getContext('2d');
+                    evolucaoChart = configurarGrafico(evolucaoCtx, 'line', {
+                        labels: evolucaoOrdenada.map(e => e[0]),
+                        datasets: [{
+                            label: 'Observações por Mês',
+                            data: evolucaoOrdenada.map(e => e[1]),
+                            borderColor: '#009a44', // Verde
+                            backgroundColor: 'rgba(0, 154, 68, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            extraData: evolucaoOrdenada.map(mes => {
+                                const fornecedoresMes = fornecedores.filter(f => 
+                                    f.observacoes.some(obs => obs.mesAno === mes[0])
+                                );
+                                const empresas = {};
+                                fornecedoresMes.forEach(f => {
+                                    empresas[f.empresa] = (empresas[f.empresa] || 0) + 1;
+                                });
+                                return `Empresas:\n${Object.entries(empresas).map(([empresa, qtd]) => `• ${empresa}: ${qtd}`).join('\n')}`;
+                            })
+                        }]
+                    });
+                    
+                    // Atualizar resumo estatístico
+                    const resumoEstatistico = document.getElementById('resumoEstatistico');
+                    resumoEstatistico.innerHTML = `
+                        <div class="stat-card">
+                            <h4>Total Fornecedores</h4>
+                            <p>${fornecedores.length}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Fornecedores OK</h4>
+                            <p>${statusCount[0]}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Em Atenção</h4>
+                            <p>${statusCount[1]}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Bloqueados</h4>
+                            <p>${statusCount[2]}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Total Strikes</h4>
+                            <p>${fornecedores.reduce((sum, f) => sum + f.strikes, 0)}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Média Strikes/Fornecedor</h4>
+                            <p>${fornecedores.length > 0 ? (fornecedores.reduce((sum, f) => sum + f.strikes, 0) / fornecedores.length).toFixed(2) : 0}</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    handleError(error, 'Atualização do dashboard');
+                }
             }
             
             // Alternar entre abas
             btnAlternarAba.addEventListener('click', function() {
-                if (abaCadastro.classList.contains('ativa')) {
-                    abaCadastro.classList.remove('ativa');
-                    abaDashboard.classList.add('ativa');
-                    btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Voltar para Cadastro';
-                    atualizarDashboard();
-                } else {
-                    abaCadastro.classList.add('ativa');
-                    abaDashboard.classList.remove('ativa');
-                    btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Ver Dashboard';
+                try {
+                    if (abaCadastro.classList.contains('ativa')) {
+                        abaCadastro.classList.remove('ativa');
+                        abaDashboard.classList.add('ativa');
+                        btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Voltar para Cadastro';
+                        atualizarDashboard();
+                    } else {
+                        abaCadastro.classList.add('ativa');
+                        abaDashboard.classList.remove('ativa');
+                        btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Ver Dashboard';
+                    }
+                } catch (error) {
+                    handleError(error, 'Alternância de abas');
                 }
             });
             
             // Criar backup
             btnBackup.addEventListener('click', function() {
-                const backupData = JSON.stringify(fornecedores);
-                navigator.clipboard.writeText(backupData).then(() => {
-                    showToast('Backup copiado para a área de transferência!');
-                }).catch(err => {
-                    console.error('Erro ao copiar backup:', err);
-                    showToast('Erro ao copiar backup', 'error');
-                });
+                try {
+                    const backupData = JSON.stringify(fornecedores);
+                    navigator.clipboard.writeText(backupData).then(() => {
+                        showToast('Backup copiado para a área de transferência!');
+                    }).catch(err => {
+                        throw new Error('Não foi possível copiar para a área de transferência');
+                    });
+                } catch (error) {
+                    handleError(error, 'Criação de backup');
+                }
             });
             
             // Abrir modal para restaurar backup
             btnRestore.addEventListener('click', function() {
-                modalBackup.style.display = 'flex';
+                try {
+                    document.getElementById('backupData').value = '';
+                    modalBackup.style.display = 'flex';
+                } catch (error) {
+                    handleError(error, 'Abertura de modal de backup');
+                }
             });
             
             // Confirmar restauração de backup
             btnConfirmRestore.addEventListener('click', function() {
                 try {
                     const backupData = document.getElementById('backupData').value;
+                    const backupMode = document.querySelector('input[name="backupMode"]:checked').value;
                     const parsedData = JSON.parse(backupData);
                     
-                    if (!Array.isArray(parsedData)) {
-                        throw new Error('Dados inválidos');
-                    }
+                    validarDadosBackup(parsedData);
                     
-                    if (confirm('ATENÇÃO: Isso substituirá TODOS os dados atuais. Deseja continuar?')) {
+                    if (backupMode === 'replace') {
+                        if (!confirm('ATENÇÃO: Isso substituirá TODOS os dados atuais. Deseja continuar?')) {
+                            return;
+                        }
+                        
                         fornecedores = parsedData;
+                        showToast('Backup substituído com sucesso!', 'success');
+                    } 
+                    else { // Modo merge
+                        const newIds = new Set(fornecedores.map(f => f.id));
+                        const novosFornecedores = parsedData.filter(f => !newIds.has(f.id));
                         
-                        // Garantir que fornecedores antigos tenham o campo empresa
-                        fornecedores.forEach(f => {
-                            if (!f.empresa) {
-                                f.empresa = 'OUTRA';
-                            }
-                        });
+                        if (novosFornecedores.length === 0) {
+                            showToast('Nenhum novo fornecedor encontrado no backup para adicionar', 'warning');
+                            return;
+                        }
                         
-                        localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
-                        renderizarTabela();
-                        atualizarDashboard();
-                        modalBackup.style.display = 'none';
-                        showToast('Backup restaurado com sucesso!');
+                        fornecedores.push(...novosFornecedores);
+                        showToast(`Backup mesclado: ${novosFornecedores.length} novos registros adicionados`, 'success');
                     }
+
+                    // Garantir que fornecedores antigos tenham o campo empresa
+                    fornecedores.forEach(f => {
+                        if (!f.empresa) {
+                            f.empresa = 'OUTRA';
+                        }
+                    });
+                    
+                    // Atualizar dados e UI
+                    localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
+                    renderizarTabela();
+                    atualizarDashboard();
+                    modalBackup.style.display = 'none';
+                    
                 } catch (error) {
-                    console.error('Erro ao restaurar backup:', error);
-                    showToast('Erro ao restaurar backup - dados inválidos', 'error');
+                    handleError(error, 'Restauração de backup');
                 }
             });
             
             // Exportar para Excel
             btnExport.addEventListener('click', function() {
-                // Criar CSV
-                let csv = 'Fornecedor;CNPJ;Empresa;Local;Strikes;Último Strike;Status\n';
-                
-                fornecedores.forEach(fornecedor => {
-                    const status = fornecedor.strikes >= 3 ? 'Bloqueado' : 
-                                  fornecedor.strikes > 0 ? 'Atenção' : 'OK';
+                try {
+                    // Criar CSV
+                    let csv = 'Fornecedor;CNPJ;Empresa;Local;Strikes;Último Strike;Status\n';
                     
-                    csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.empresa}";"${fornecedor.local}";` +
-                           `"${fornecedor.strikes}/3";"${fornecedor.ultimoStrike || 'Nenhum'}";"${status}"\n`;
-                });
-                
-                // Criar link de download
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `fornecedores_${new Date().toISOString().slice(0,10)}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                showToast('Exportação para CSV realizada com sucesso!');
+                    fornecedores.forEach(fornecedor => {
+                        const status = fornecedor.strikes >= 3 ? 'Bloqueado' : 
+                                      fornecedor.strikes > 0 ? 'Atenção' : 'OK';
+                        
+                        csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.empresa}";"${fornecedor.local}";` +
+                               `"${fornecedor.strikes}/3";"${fornecedor.ultimoStrike || 'Nenhum'}";"${status}"\n`;
+                    });
+                    
+                    // Criar link de download
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `fornecedores_${new Date().toISOString().slice(0,10)}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    showToast('Exportação para CSV realizada com sucesso!');
+                } catch (error) {
+                    handleError(error, 'Exportação para CSV');
+                }
             });
             
             // Aplicar filtros automaticamente ao digitar (com debounce)
@@ -1709,7 +1982,13 @@
             [filtroFornecedor, filtroLocal, filtroEmpresa, filtroStatus].forEach(element => {
                 element.addEventListener('input', function() {
                     clearTimeout(timeoutFiltro);
-                    timeoutFiltro = setTimeout(renderizarTabela, 500);
+                    timeoutFiltro = setTimeout(() => {
+                        try {
+                            renderizarTabela();
+                        } catch (error) {
+                            handleError(error, 'Aplicação de filtros');
+                        }
+                    }, 500);
                 });
             });
             
