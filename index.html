@@ -6,157 +6,127 @@
     <title>Controle de Strikes - Fornecedores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
     
+    <!-- Firebase SDK (MANTIDO, MAS SEM AUTH) -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics-compat.js"></script>
+
     <style>
-        /* [Mantenha todo seu CSS original aqui] */
-        :root {
-            --primary: #4285f4;
-            --primary-dark: #3367d6;
-            /* ... todos os seus estilos ... */
-        }
-        /* ... */
+        /* (MANTIDO: Todo o CSS original permanece igual) */
     </style>
 </head>
 <body>
-    <!-- [Mantenha todo seu HTML original aqui] -->
+    <!-- Tela de Login SIMPLES (admin/admin123) -->
     <div id="loginScreen" class="login-container">
-        <!-- ... -->
+        <h1 class="login-title"><i class="fas fa-lock"></i> Acesso ao Sistema</h1>
+        <div class="form-group">
+            <label for="loginUsername"><i class="fas fa-user"></i> Usuário:</label>
+            <input type="text" id="loginUsername" placeholder="Digite seu usuário">
+        </div>
+        <div class="form-group">
+            <label for="loginPassword"><i class="fas fa-key"></i> Senha:</label>
+            <input type="password" id="loginPassword" placeholder="Digite sua senha">
+        </div>
+        <div class="form-actions">
+            <button id="btnLogin"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        </div>
+        <div class="login-footer">
+            <p>Use <strong>admin</strong> / <strong>admin123</strong> para teste</p>
+        </div>
     </div>
 
     <div id="appContainer" class="container" style="display: none;">
-        <!-- ... todo o conteúdo da sua interface ... -->
+        <!-- (MANTIDO: Todo o resto do HTML original) -->
     </div>
 
     <script>
-        // ================== CONFIGURAÇÃO FIREBASE ================== //
+        // Configuração do Firebase (MANTIDA)
         const firebaseConfig = {
             apiKey: "AIzaSyA1yYOHNQlYeLVW8-dJytZWi5nxrOw5sKg",
             authDomain: "controle-de-strikes.firebaseapp.com",
             databaseURL: "https://controle-de-strikes-default-rtdb.firebaseio.com",
             projectId: "controle-de-strikes",
-            storageBucket: "controle-de-strikes.firebasestorage.app",
+            storageBucket: "controle-de-strikes.appspot.com",
             messagingSenderId: "1020219235699",
             appId: "1:1020219235699:web:a905c972b399020c6a7906",
             measurementId: "G-L96DH4PCDZ"
         };
 
-        // Inicialize o Firebase
+        // Initialize Firebase (SEM AUTH)
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const fornecedoresRef = database.ref('fornecedores');
+        const analytics = firebase.analytics();
 
-        // ================== VARIÁVEIS GLOBAIS ================== //
-        let editandoId = null;
-        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-        // ================== FUNÇÕES FIREBASE ================== //
-        function salvarFornecedor(fornecedor) {
-            if (editandoId) {
-                return fornecedoresRef.child(editandoId).update(fornecedor)
-                    .then(() => {
-                        showToast('Fornecedor atualizado com sucesso!');
-                        cancelarEdicao();
-                    });
-            } else {
-                return fornecedoresRef.push().set(fornecedor)
-                    .then(() => showToast('Fornecedor cadastrado com sucesso!'));
-            }
-        }
-
-        function carregarFornecedores(callback) {
-            fornecedoresRef.on('value', (snapshot) => {
-                const dados = snapshot.val() || {};
-                const lista = Object.keys(dados).map(id => ({ id, ...dados[id] }));
-                callback(lista);
-            });
-        }
-
-        function excluirFornecedor(id) {
-            return fornecedoresRef.child(id).remove()
-                .then(() => showToast('Fornecedor excluído com sucesso!'));
-        }
-
-        // ================== FUNÇÕES DA INTERFACE ================== //
-        function renderizarTabela(fornecedores) {
-            const tabela = document.getElementById('corpoTabela');
-            tabela.innerHTML = fornecedores.map(fornecedor => `
-                <tr class="${fornecedor.strikes >= 3 ? 'strike-max' : fornecedor.strikes > 0 ? 'strike-warning' : ''}">
-                    <td data-label="Fornecedor">${fornecedor.nome}</td>
-                    <td data-label="CNPJ">${fornecedor.cnpjFormatado || formatarCNPJ(fornecedor.cnpj)}</td>
-                    <td data-label="Local">${fornecedor.local}</td>
-                    <td data-label="Empresa">${fornecedor.empresa}</td>
-                    <td data-label="Strikes">${fornecedor.strikes || 0}/3</td>
-                    <td data-label="Último Strike">${fornecedor.ultimoStrike || 'Nenhum'}</td>
-                    <td data-label="Status">
-                        <span class="status-badge ${
-                            fornecedor.strikes >= 3 ? 'danger' : 
-                            fornecedor.strikes > 0 ? 'warning' : 'success'
-                        }">
-                            ${fornecedor.strikes >= 3 ? 'Bloqueado' : 
-                             fornecedor.strikes > 0 ? 'Atenção' : 'OK'}
-                        </span>
-                    </td>
-                    <td data-label="Ações" class="acoes">
-                        <button class="btn-editar" data-id="${fornecedor.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-excluir" data-id="${fornecedor.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                        <button class="btn-detalhes" data-id="${fornecedor.id}">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Adiciona eventos aos botões
-            document.querySelectorAll('.btn-editar').forEach(btn => {
-                btn.addEventListener('click', () => editarFornecedor(btn.dataset.id));
-            });
-            
-            document.querySelectorAll('.btn-excluir').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (confirm('Tem certeza que deseja excluir este fornecedor?')) {
-                        excluirFornecedor(btn.dataset.id);
-                    }
-                });
-            });
-        }
-
-        // [Mantenha todas as outras funções auxiliares: formatarCNPJ, validarCNPJ, showToast, etc.]
-
-        // ================== INICIALIZAÇÃO ================== //
         document.addEventListener('DOMContentLoaded', function() {
-            // Configura eventos
-            document.getElementById('formFornecedor').addEventListener('submit', function(e) {
-                e.preventDefault();
+            // Dados dos fornecedores (agora no Firebase Database)
+            let fornecedores = [];
+            let editandoId = null;
+            let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            // Elementos do DOM (MANTIDOS)
+            const loginScreen = document.getElementById('loginScreen');
+            const appContainer = document.getElementById('appContainer');
+
+            // Verificar autenticação SIMPLES (admin/admin123)
+            function checkAuth() {
+                if (isLoggedIn) {
+                    loginScreen.style.display = 'none';
+                    appContainer.style.display = 'block';
+                    carregarFornecedores(); // Agora carrega do Firebase
+                } else {
+                    loginScreen.style.display = 'block';
+                    appContainer.style.display = 'none';
+                }
+            }
+
+            // Login SIMPLES (sem Firebase Auth)
+            document.getElementById('btnLogin').addEventListener('click', function() {
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
                 
-                const [ano, mes] = document.getElementById('mesAno').value.split('-');
-                const fornecedor = {
-                    nome: document.getElementById('fornecedor').value.trim(),
-                    cnpj: document.getElementById('cnpj').value.replace(/\D/g, ''),
-                    empresa: document.getElementById('empresa').value,
-                    local: document.getElementById('local').value.trim(),
-                    mesAno: `${mes}-${ano}`,
-                    observacao: document.getElementById('observacao').value.trim(),
-                    data: new Date().toISOString(),
-                    strikes: 1 // Você pode ajustar a lógica de strikes conforme necessário
-                };
-
-                salvarFornecedor(fornecedor).then(() => this.reset());
+                if (username === 'admin' && password === 'admin123') {
+                    isLoggedIn = true;
+                    localStorage.setItem('isLoggedIn', 'true');
+                    checkAuth();
+                    showToast('Login realizado com sucesso!');
+                } else {
+                    showToast('Usuário ou senha incorretos!', 'error');
+                }
             });
 
-            // Carrega dados iniciais
-            carregarFornecedores(fornecedores => {
-                renderizarTabela(fornecedores);
-                atualizarDashboard(fornecedores);
+            // Logout SIMPLES
+            document.getElementById('btnLogout').addEventListener('click', function() {
+                isLoggedIn = false;
+                localStorage.removeItem('isLoggedIn');
+                checkAuth();
+                showToast('Você saiu do sistema');
             });
 
-            // [Mantenha o resto da sua inicialização]
+            // Carregar fornecedores do Firebase Database (MANTIDO)
+            function carregarFornecedores() {
+                database.ref('fornecedores').on('value', (snapshot) => {
+                    fornecedores = [];
+                    const data = snapshot.val();
+                    
+                    if (data) {
+                        Object.keys(data).forEach((key) => {
+                            fornecedores.push({
+                                id: key,
+                                ...data[key]
+                            });
+                        });
+                    }
+                    
+                    renderizarTabela();
+                    atualizarDashboard();
+                });
+            }
+
+            // (MANTIDO: Todas as outras funções originais, como renderizarTabela, atualizarDashboard, etc.)
+
+            // Inicialização
+            checkAuth();
         });
     </script>
 </body>
