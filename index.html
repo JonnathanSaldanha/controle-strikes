@@ -551,14 +551,15 @@
         }
 
         /* Ajustes para nova coluna de empresa */
-        #tabelaFornecedores th:nth-child(1) { width: 20%; }
-        #tabelaFornecedores th:nth-child(2) { width: 15%; }
-        #tabelaFornecedores th:nth-child(3) { width: 15%; }
+        #tabelaFornecedores th:nth-child(1) { width: 15%; }
+        #tabelaFornecedores th:nth-child(2) { width: 12%; }
+        #tabelaFornecedores th:nth-child(3) { width: 12%; }
         #tabelaFornecedores th:nth-child(4) { width: 10%; }
-        #tabelaFornecedores th:nth-child(5) { width: 8%; }
-        #tabelaFornecedores th:nth-child(6) { width: 12%; }
+        #tabelaFornecedores th:nth-child(5) { width: 10%; }
+        #tabelaFornecedores th:nth-child(6) { width: 8%; }
         #tabelaFornecedores th:nth-child(7) { width: 10%; }
         #tabelaFornecedores th:nth-child(8) { width: 10%; }
+        #tabelaFornecedores th:nth-child(9) { width: 13%; }
 
         /* Estilos para o modal de backup */
         .modal-content label[for] {
@@ -581,6 +582,21 @@
 
         .dark-mode .fas {
             color: var(--secondary-light);
+        }
+
+        /* Estilo para os novos ícones */
+        .fa-hashtag, .fa-barcode {
+            color: var(--primary);
+        }
+
+        .dark-mode .fa-hashtag, 
+        .dark-mode .fa-barcode {
+            color: var(--secondary-light);
+        }
+
+        /* Estilo para o grupo do código de serviço */
+        #codigoServicoGroup {
+            transition: all 0.3s ease;
         }
 
         /* Estilos para outras observações */
@@ -768,6 +784,18 @@
                     </select>
                 </div>
                 
+                <div class="form-group" id="codigoServicoGroup" style="display: none;">
+                    <label for="codigoServico"><i class="fas fa-barcode"></i> Código do Serviço:</label>
+                    <select id="codigoServico">
+                        <option value="">Selecione o código</option>
+                        <option value="7.02">7.02 - Serviços de engenharia</option>
+                        <option value="7.07">7.07 - Manutenção predial</option>
+                        <option value="7.08">7.08 - Limpeza e conservação</option>
+                        <option value="7.09">7.09 - Serviços de segurança</option>
+                        <option value="7.10">7.10 - Serviços de informática</option>
+                    </select>
+                </div>
+                
                 <div class="form-group">
                     <label for="empresa"><i class="fas fa-industry"></i> Empresa:</label>
                     <select id="empresa" required>
@@ -783,6 +811,11 @@
                 <div class="form-group">
                     <label for="local"><i class="fas fa-map-marker-alt"></i> Local de Serviço:</label>
                     <input type="text" id="local" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="numeroServico"><i class="fas fa-hashtag"></i> N° Serviço V360:</label>
+                    <input type="text" id="numeroServico" placeholder="Número do serviço no V360">
                 </div>
                 
                 <div class="form-group">
@@ -857,6 +890,7 @@
                             <th>Local</th>
                             <th>Empresa</th>
                             <th>Tipo de Imposto</th>
+                            <th>N° V360</th>
                             <th>Strikes</th>
                             <th>Status</th>
                             <th>Ações</th>
@@ -1061,6 +1095,11 @@
             const filtroTipo = document.getElementById('filtroTipo');
             const filtroStatus = document.getElementById('filtroStatus');
             
+            // Novos elementos adicionados
+            const tipoFornecedorSelect = document.getElementById('tipoFornecedor');
+            const codigoServicoGroup = document.getElementById('codigoServicoGroup');
+            const codigoServicoSelect = document.getElementById('codigoServico');
+            
             // Gráficos
             let strikesChartFederal, statusChartFederal, locaisChartFederal, evolucaoChartFederal;
             let strikesChartMunicipal, statusChartMunicipal, locaisChartMunicipal, evolucaoChartMunicipal;
@@ -1219,6 +1258,19 @@
                 });
             });
             
+            // Mostrar/ocultar campo de código de serviço baseado no tipo selecionado
+            tipoFornecedorSelect.addEventListener('change', function() {
+                try {
+                    codigoServicoGroup.style.display = this.value === 'MUNICIPAL' ? 'block' : 'none';
+                    
+                    if (this.value !== 'MUNICIPAL') {
+                        codigoServicoSelect.value = '';
+                    }
+                } catch (error) {
+                    handleError(error, 'Alternância de tipo de fornecedor');
+                }
+            });
+            
             // Login
             btnLogin.addEventListener('click', function() {
                 try {
@@ -1339,8 +1391,10 @@
                     const nome = document.getElementById('fornecedor').value.trim();
                     const cnpj = document.getElementById('cnpj').value.replace(/\D/g, '');
                     const tipoFornecedor = document.getElementById('tipoFornecedor').value;
+                    const codigoServico = document.getElementById('codigoServico').value;
                     const empresa = document.getElementById('empresa').value;
                     const local = document.getElementById('local').value.trim();
+                    const numeroServico = document.getElementById('numeroServico').value.trim();
                     const mesAno = document.getElementById('mesAno').value;
                     const observacao = document.getElementById('observacao').value.trim();
                     
@@ -1351,6 +1405,11 @@
                     
                     if (!validarCNPJ(cnpj)) {
                         throw new Error('CNPJ inválido!');
+                    }
+                    
+                    // Validação para código de serviço quando for municipal
+                    if (tipoFornecedor === 'MUNICIPAL' && !codigoServico) {
+                        throw new Error('Por favor, selecione o código do serviço para fornecedores municipais');
                     }
                     
                     // Formata MM-AAAA
@@ -1365,8 +1424,10 @@
                             fornecedores[fornecedorIndex].cnpj = cnpj;
                             fornecedores[fornecedorIndex].cnpjFormatado = formatarCNPJ(cnpj);
                             fornecedores[fornecedorIndex].tipo = tipoFornecedor;
+                            fornecedores[fornecedorIndex].codigoServico = tipoFornecedor === 'MUNICIPAL' ? codigoServico : null;
                             fornecedores[fornecedorIndex].empresa = empresa;
                             fornecedores[fornecedorIndex].local = local;
+                            fornecedores[fornecedorIndex].numeroServico = numeroServico;
                             
                             // Limpa o modo de edição
                             cancelarEdicao();
@@ -1407,8 +1468,10 @@
                                 cnpj,
                                 cnpjFormatado: formatarCNPJ(cnpj),
                                 tipo: tipoFornecedor,
+                                codigoServico: tipoFornecedor === 'MUNICIPAL' ? codigoServico : null,
                                 empresa,
                                 local,
+                                numeroServico,
                                 observacoes: [],
                                 strikes: 0,
                                 ultimoStrike: null
@@ -1449,6 +1512,9 @@
                     
                     // Limpa o formulário
                     form.reset();
+                    
+                    // Resetar visibilidade do campo de código de serviço
+                    codigoServicoGroup.style.display = 'none';
                 } catch (error) {
                     handleError(error, 'Cadastro de fornecedor');
                 }
@@ -1488,6 +1554,7 @@
                     form.reset();
                     btnSalvar.innerHTML = '<i class="fas fa-save"></i> Registrar Observação';
                     btnCancelar.style.display = 'none';
+                    codigoServicoGroup.style.display = 'none';
                 } catch (error) {
                     handleError(error, 'Cancelamento de edição');
                 }
@@ -1500,6 +1567,7 @@
                     form.reset();
                     btnSalvar.innerHTML = '<i class="fas fa-save"></i> Registrar Observação';
                     btnCancelar.style.display = 'none';
+                    codigoServicoGroup.style.display = 'none';
                 } catch (error) {
                     handleError(error, 'Cancelamento de edição de observação');
                 }
@@ -1523,8 +1591,18 @@
                     document.getElementById('fornecedor').value = fornecedor.nome;
                     document.getElementById('cnpj').value = fornecedor.cnpjFormatado;
                     document.getElementById('tipoFornecedor').value = fornecedor.tipo;
+                    
+                    // Mostrar/ocultar campo de código de serviço
+                    if (fornecedor.tipo === 'MUNICIPAL') {
+                        codigoServicoGroup.style.display = 'block';
+                        document.getElementById('codigoServico').value = fornecedor.codigoServico || '';
+                    } else {
+                        codigoServicoGroup.style.display = 'none';
+                    }
+                    
                     document.getElementById('empresa').value = fornecedor.empresa;
                     document.getElementById('local').value = fornecedor.local;
+                    document.getElementById('numeroServico').value = fornecedor.numeroServico || '';
                     
                     // Ativa o modo de edição
                     editandoId = id;
@@ -1548,12 +1626,22 @@
                     const observacao = fornecedor.observacoes.find(obs => obs.id === observacaoId);
                     if (!observacao) throw new Error('Observação não encontrada');
                     
-                    // Preenche o formulário com os dados da observação
+                    // Preenche o formulário com os dados do fornecedor
                     document.getElementById('fornecedor').value = fornecedor.nome;
                     document.getElementById('cnpj').value = fornecedor.cnpjFormatado;
                     document.getElementById('tipoFornecedor').value = fornecedor.tipo;
+                    
+                    // Mostrar/ocultar campo de código de serviço
+                    if (fornecedor.tipo === 'MUNICIPAL') {
+                        codigoServicoGroup.style.display = 'block';
+                        document.getElementById('codigoServico').value = fornecedor.codigoServico || '';
+                    } else {
+                        codigoServicoGroup.style.display = 'none';
+                    }
+                    
                     document.getElementById('empresa').value = fornecedor.empresa;
                     document.getElementById('local').value = fornecedor.local;
+                    document.getElementById('numeroServico').value = fornecedor.numeroServico || '';
                     
                     // Preenche os campos específicos da observação
                     const [mes, ano] = observacao.mesAno.split('-');
@@ -1691,6 +1779,7 @@
                             <td data-label="Local">${fornecedor.local}</td>
                             <td data-label="Empresa">${fornecedor.empresa}</td>
                             <td data-label="Tipo de Imposto">${fornecedor.tipo}</td>
+                            <td data-label="N° V360">${fornecedor.numeroServico || '-'}</td>
                             <td data-label="Strikes">${fornecedor.strikes}/3</td>
                             <td data-label="Status">
                                 ${fornecedor.strikes >= 3 
@@ -1784,7 +1873,11 @@
                         <div class="info-fornecedor">
                             <p><strong>CNPJ:</strong> ${fornecedor.cnpjFormatado}</p>
                             <p><strong>Tipo de Imposto:</strong> ${fornecedor.tipo}</p>
+                            ${fornecedor.tipo === 'MUNICIPAL' && fornecedor.codigoServico 
+                                ? `<p><strong>Código do Serviço:</strong> ${fornecedor.codigoServico}</p>` 
+                                : ''}
                             <p><strong>Empresa:</strong> ${fornecedor.empresa}</p>
+                            <p><strong>N° Serviço V360:</strong> ${fornecedor.numeroServico || 'Não informado'}</p>
                             <p><strong>Total Strikes:</strong> ${fornecedor.strikes}/3</p>
                             <p><strong>Último Strike:</strong> ${fornecedor.ultimoStrike || 'Nenhum'}</p>
                         </div>
@@ -1928,6 +2021,7 @@
                                         <th>Local</th>
                                         <th>Empresa</th>
                                         <th>Tipo de Imposto</th>
+                                        <th>N° V360</th>
                                         <th>Strikes</th>
                                         <th>Status</th>
                                     </tr>
@@ -1942,6 +2036,7 @@
                                     <td>${fornecedor.local}</td>
                                     <td>${fornecedor.empresa}</td>
                                     <td>${fornecedor.tipo}</td>
+                                    <td>${fornecedor.numeroServico || '-'}</td>
                                     <td>${fornecedor.strikes}</td>
                                     <td>
                                         ${fornecedor.strikes >= 3 
@@ -2352,6 +2447,8 @@
                         if (!f.empresa) f.empresa = 'OUTRA';
                         if (!f.cnpjFormatado) f.cnpjFormatado = formatarCNPJ(f.cnpj);
                         if (!f.observacoes) f.observacoes = [];
+                        if (!f.numeroServico) f.numeroServico = '';
+                        if (!f.codigoServico && f.tipo === 'MUNICIPAL') f.codigoServico = '7.02'; // Valor padrão
                     });
                     
                     // Atualizar dados e UI
@@ -2369,14 +2466,14 @@
             btnExport.addEventListener('click', function() {
                 try {
                     // Criar CSV
-                    let csv = 'Fornecedor;CNPJ;Tipo de Imposto;Empresa;Local;Strikes;Último Strike;Status\n';
+                    let csv = 'Fornecedor;CNPJ;Tipo de Imposto;Código Serviço;Empresa;Local;N° Serviço V360;Strikes;Último Strike;Status\n';
                     
                     fornecedores.forEach(fornecedor => {
                         const status = fornecedor.strikes >= 3 ? 'Bloqueado' : 
                                       fornecedor.strikes > 0 ? 'Atenção' : 'OK';
                         
-                        csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.tipo}";"${fornecedor.empresa}";"${fornecedor.local}";` +
-                               `"${fornecedor.strikes}/3";"${fornecedor.ultimoStrike || 'Nenhum'}";"${status}"\n`;
+                        csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.tipo}";"${fornecedor.codigoServico || ''}";"${fornecedor.empresa}";"${fornecedor.local}";` +
+                               `"${fornecedor.numeroServico || ''}";"${fornecedor.strikes}/3";"${fornecedor.ultimoStrike || 'Nenhum'}";"${status}"\n`;
                     });
                     
                     // Criar link de download
@@ -2433,6 +2530,8 @@
                 if (!f.empresa) f.empresa = 'OUTRA';
                 if (!f.cnpjFormatado) f.cnpjFormatado = formatarCNPJ(f.cnpj);
                 if (!f.observacoes) f.observacoes = [];
+                if (!f.numeroServico) f.numeroServico = '';
+                if (!f.codigoServico && f.tipo === 'MUNICIPAL') f.codigoServico = '7.02'; // Valor padrão
             });
             
             // Inicializa o sistema
