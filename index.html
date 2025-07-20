@@ -2269,15 +2269,57 @@
 
         function atualizarDashboardPorTipo(fornecedoresTipo, tipo) {
             try {
-                // Dados para os gráficos
-                const strikesCount = [0, 0, 0, 0]; // 0, 1, 2, 3 strikes
-                const statusCount = [0, 0, 0]; // OK, Atenção, Bloqueado
+                // Verificar se há dados para exibir
+                if (fornecedoresTipo.length === 0) {
+                    console.log(`Nenhum dado disponível para dashboard ${tipo}`);
+                    
+                    // Limpar os gráficos se não houver dados
+                    const chartIds = [
+                        `strikesChart${tipo}`,
+                        `statusChart${tipo}`,
+                        `locaisChart${tipo}`,
+                        `evolucaoChart${tipo}`
+                    ];
+                    
+                    chartIds.forEach(id => {
+                        const canvas = document.getElementById(id);
+                        if (canvas) {
+                            const ctx = canvas.getContext('2d');
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            
+                            // Adicionar mensagem de "Sem dados"
+                            ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#666';
+                            ctx.textAlign = 'center';
+                            ctx.font = '16px Arial';
+                            ctx.fillText('Sem dados disponíveis', canvas.width / 2, canvas.height / 2);
+                        }
+                        
+                        // Destruir gráfico existente se houver
+                        if (window[id] && typeof window[id].destroy === 'function') {
+                            window[id].destroy();
+                            window[id] = null;
+                        }
+                    });
+                    
+                    // Limpar resumo estatístico
+                    const resumoEstatistico = document.getElementById(`resumoEstatistico${tipo}`);
+                    if (resumoEstatistico) {
+                        resumoEstatistico.innerHTML = '<p>Nenhum dado disponível para exibição</p>';
+                    }
+                    
+                    return;
+                }
+
+                // Processar dados para os gráficos
+                const strikesCount = [0, 0, 0, 0];
+                const statusCount = [0, 0, 0];
                 const locaisCount = {};
                 const evolucaoData = {};
                 
                 fornecedoresTipo.forEach(fornecedor => {
                     // Contagem de strikes
-                    strikesCount[Math.min(fornecedor.strikes, 3)]++;
+                    const strikeIndex = Math.min(fornecedor.strikes, 3);
+                    strikesCount[strikeIndex]++;
                     
                     // Contagem por status
                     if (fornecedor.strikes >= 3) {
@@ -2290,18 +2332,12 @@
                     
                     // Contagem por local
                     if (fornecedor.strikes > 0) {
-                        if (!locaisCount[fornecedor.local]) {
-                            locaisCount[fornecedor.local] = 0;
-                        }
-                        locaisCount[fornecedor.local] += fornecedor.strikes;
+                        locaisCount[fornecedor.local] = (locaisCount[fornecedor.local] || 0) + fornecedor.strikes;
                     }
                     
                     // Evolução mensal
                     fornecedor.observacoes.forEach(obs => {
-                        if (!evolucaoData[obs.mesAno]) {
-                            evolucaoData[obs.mesAno] = 0;
-                        }
-                        evolucaoData[obs.mesAno]++;
+                        evolucaoData[obs.mesAno] = (evolucaoData[obs.mesAno] || 0) + 1;
                     });
                 });
                 
@@ -2315,115 +2351,128 @@
                     .sort((a, b) => a[0].localeCompare(b[0]));
                 
                 // Configurar gráficos
-                const strikesCtx = document.getElementById(`strikesChart${tipo}`).getContext('2d');
-                const statusCtx = document.getElementById(`statusChart${tipo}`).getContext('2d');
-                const locaisCtx = document.getElementById(`locaisChart${tipo}`).getContext('2d');
-                const evolucaoCtx = document.getElementById(`evolucaoChart${tipo}`).getContext('2d');
+                const strikesCtx = document.getElementById(`strikesChart${tipo}`)?.getContext('2d');
+                const statusCtx = document.getElementById(`statusChart${tipo}`)?.getContext('2d');
+                const locaisCtx = document.getElementById(`locaisChart${tipo}`)?.getContext('2d');
+                const evolucaoCtx = document.getElementById(`evolucaoChart${tipo}`)?.getContext('2d');
+                
+                // Função auxiliar para destruir gráficos com segurança
+                const destroyChart = (chartName) => {
+                    if (window[chartName] && typeof window[chartName].destroy === 'function') {
+                        window[chartName].destroy();
+                        window[chartName] = null;
+                    }
+                };
                 
                 // Destruir gráficos existentes
-                if (window[`strikesChart${tipo}`]) window[`strikesChart${tipo}`].destroy();
-                if (window[`statusChart${tipo}`]) window[`statusChart${tipo}`].destroy();
-                if (window[`locaisChart${tipo}`]) window[`locaisChart${tipo}`].destroy();
-                if (window[`evolucaoChart${tipo}`]) window[`evolucaoChart${tipo}`].destroy();
+                destroyChart(`strikesChart${tipo}`);
+                destroyChart(`statusChart${tipo}`);
+                destroyChart(`locaisChart${tipo}`);
+                destroyChart(`evolucaoChart${tipo}`);
                 
-                // Criar novos gráficos
-                window[`strikesChart${tipo}`] = new Chart(strikesCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['0 Strikes', '1 Strike', '2 Strikes', '3 Strikes'],
-                        datasets: [{
-                            label: 'Quantidade de Fornecedores',
-                            data: strikesCount,
-                            backgroundColor: [
-                                '#009a44', // Verde
-                                '#ffc107', // Amarelo
-                                '#ff9800', // Laranja
-                                '#dc3545'  // Vermelho
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: getChartOptions()
-                });
+                // Criar novos gráficos apenas se os contextos existirem
+                if (strikesCtx) {
+                    window[`strikesChart${tipo}`] = new Chart(strikesCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['0 Strikes', '1 Strike', '2 Strikes', '3 Strikes'],
+                            datasets: [{
+                                label: 'Quantidade de Fornecedores',
+                                data: strikesCount,
+                                backgroundColor: [
+                                    '#009a44', '#ffc107', '#ff9800', '#dc3545'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: getChartOptions()
+                    });
+                }
                 
-                window[`statusChart${tipo}`] = new Chart(statusCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: ['OK', 'Atenção', 'Bloqueado'],
-                        datasets: [{
-                            data: statusCount,
-                            backgroundColor: [
-                                '#009a44', // Verde
-                                '#ffc107', // Amarelo
-                                '#dc3545'  // Vermelho
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: getChartOptions()
-                });
+                if (statusCtx) {
+                    window[`statusChart${tipo}`] = new Chart(statusCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['OK', 'Atenção', 'Bloqueado'],
+                            datasets: [{
+                                data: statusCount,
+                                backgroundColor: [
+                                    '#009a44', '#ffc107', '#dc3545'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: getChartOptions()
+                    });
+                }
                 
-                window[`locaisChart${tipo}`] = new Chart(locaisCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: topLocais.map(m => m[0]),
-                        datasets: [{
-                            label: 'Total de Strikes',
-                            data: topLocais.map(m => m[1]),
-                            backgroundColor: '#0066b3', // Azul Eletrobras
-                            borderWidth: 1
-                        }]
-                    },
-                    options: getChartOptions()
-                });
+                if (locaisCtx) {
+                    window[`locaisChart${tipo}`] = new Chart(locaisCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: topLocais.map(m => m[0]),
+                            datasets: [{
+                                label: 'Total de Strikes',
+                                data: topLocais.map(m => m[1]),
+                                backgroundColor: '#0066b3',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: getChartOptions()
+                    });
+                }
                 
-                window[`evolucaoChart${tipo}`] = new Chart(evolucaoCtx, {
-                    type: 'line',
-                    data: {
-                        labels: evolucaoOrdenada.map(e => e[0]),
-                        datasets: [{
-                            label: 'Observações por Mês',
-                            data: evolucaoOrdenada.map(e => e[1]),
-                            borderColor: '#009a44', // Verde
-                            backgroundColor: 'rgba(0, 154, 68, 0.1)',
-                            borderWidth: 2,
-                            fill: true
-                        }]
-                    },
-                    options: getChartOptions()
-                });
+                if (evolucaoCtx) {
+                    window[`evolucaoChart${tipo}`] = new Chart(evolucaoCtx, {
+                        type: 'line',
+                        data: {
+                            labels: evolucaoOrdenada.map(e => e[0]),
+                            datasets: [{
+                                label: 'Observações por Mês',
+                                data: evolucaoOrdenada.map(e => e[1]),
+                                borderColor: '#009a44',
+                                backgroundColor: 'rgba(0, 154, 68, 0.1)',
+                                borderWidth: 2,
+                                fill: true
+                            }]
+                        },
+                        options: getChartOptions()
+                    });
+                }
                 
                 // Atualizar resumo estatístico
                 const resumoEstatistico = document.getElementById(`resumoEstatistico${tipo}`);
-                resumoEstatistico.innerHTML = `
-                    <div class="stat-card">
-                        <h4>Total Fornecedores</h4>
-                        <p>${fornecedoresTipo.length}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Fornecedores OK</h4>
-                        <p>${statusCount[0]}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Em Atenção</h4>
-                        <p>${statusCount[1]}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Bloqueados</h4>
-                        <p>${statusCount[2]}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Total Strikes</h4>
-                        <p>${fornecedoresTipo.reduce((sum, f) => sum + f.strikes, 0)}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Média Strikes/Fornecedor</h4>
-                        <p>${fornecedoresTipo.length > 0 ? (fornecedoresTipo.reduce((sum, f) => sum + f.strikes, 0) / fornecedoresTipo.length).toFixed(2) : 0}</p>
-                    </div>
-                `;
+                if (resumoEstatistico) {
+                    resumoEstatistico.innerHTML = `
+                        <div class="stat-card">
+                            <h4>Total Fornecedores</h4>
+                            <p>${fornecedoresTipo.length}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Fornecedores OK</h4>
+                            <p>${statusCount[0]}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Em Atenção</h4>
+                            <p>${statusCount[1]}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Bloqueados</h4>
+                            <p>${statusCount[2]}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Total Strikes</h4>
+                            <p>${fornecedoresTipo.reduce((sum, f) => sum + f.strikes, 0)}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Média Strikes/Fornecedor</h4>
+                            <p>${fornecedoresTipo.length > 0 ? (fornecedoresTipo.reduce((sum, f) => sum + f.strikes, 0) / fornecedoresTipo.length).toFixed(2) : 0}</p>
+                        </div>
+                    `;
+                }
                 
             } catch (error) {
-                handleError(error, `Atualização do dashboard ${tipo}`);
+                console.error(`Erro ao atualizar dashboard ${tipo}:`, error);
             }
         }
 
@@ -2437,28 +2486,18 @@
                 maintainAspectRatio: false,
                 scales: {
                     x: {
-                        grid: {
-                            color: gridColor
-                        },
-                        ticks: {
-                            color: textColor
-                        }
+                        grid: { color: gridColor },
+                        ticks: { color: textColor }
                     },
                     y: {
-                        grid: {
-                            color: gridColor
-                        },
-                        ticks: {
-                            color: textColor
-                        },
+                        grid: { color: gridColor },
+                        ticks: { color: textColor },
                         beginAtZero: true
                     }
                 },
                 plugins: {
                     legend: {
-                        labels: {
-                            color: textColor
-                        }
+                        labels: { color: textColor }
                     }
                 }
             };
