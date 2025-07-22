@@ -504,6 +504,12 @@
             position: relative;
             height: 250px;
             width: 100%;
+            cursor: pointer;
+        }
+
+        .chart-container:hover {
+            transform: scale(1.01);
+            transition: transform 0.3s ease;
         }
 
         /* Filtros na tabela */
@@ -762,6 +768,51 @@
             opacity: 1;
         }
 
+        /* Estilos para o modal de gráficos */
+        .chart-container-modal {
+            height: 400px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .dados-tabela {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .dados-tabela table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .dados-tabela th, .dados-tabela td {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            text-align: left;
+        }
+
+        .dados-tabela th {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* Dashboard tabs */
+        .dashboard-tab {
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
         /* Responsivo */
         @media (max-width: 768px) {
             .container {
@@ -839,6 +890,15 @@
 
             .acoes {
                 justify-content: flex-end;
+            }
+
+            /* Ajustes para modal de gráficos em mobile */
+            .chart-container-modal {
+                height: 300px;
+            }
+            
+            .modal-content {
+                max-height: 90vh;
             }
         }
     </style>
@@ -1043,9 +1103,26 @@
         <div id="abaDashboard" class="aba">
             <h2><i class="fas fa-chart-pie"></i> Dashboard Analítico</h2>
             
-            <div class="dashboard-tabs" style="margin-bottom: 20px; display: flex; gap: 10px;">
-                <button class="dashboard-tab active" data-tab="federal" style="padding: 8px 15px; background-color: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Federal</button>
-                <button class="dashboard-tab" data-tab="municipal" style="padding: 8px 15px; background-color: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Municipal</button>
+            <div class="dashboard-tabs" style="margin-bottom: 20px; display: flex; gap: 10px; border-bottom: 1px solid var(--medium-gray); padding-bottom: 10px;">
+                <button class="dashboard-tab active" data-tab="federal" 
+                        style="padding: 8px 15px; 
+                               background-color: var(--primary); 
+                               color: white; 
+                               border: none; 
+                               border-radius: 4px 4px 0 0;
+                               cursor: pointer;
+                               border-bottom: 3px solid var(--secondary);">
+                    <i class="fas fa-flag"></i> Federal
+                </button>
+                <button class="dashboard-tab" data-tab="municipal" 
+                        style="padding: 8px 15px; 
+                               background-color: var(--primary-light); 
+                               color: var(--primary-dark); 
+                               border: none; 
+                               border-radius: 4px 4px 0 0;
+                               cursor: pointer;">
+                    <i class="fas fa-flag"></i> Municipal
+                </button>
             </div>
             
             <div id="dashboardFederal" class="dashboard-content active">
@@ -1170,6 +1247,21 @@
             </div>
         </div>
 
+        <!-- Modal de Gráficos -->
+        <div class="modal" id="modalGrafico">
+            <div class="modal-content" style="max-width: 800px;">
+                <span class="close-modal">&times;</span>
+                <h2 id="tituloGrafico"></h2>
+                <div class="chart-container-modal">
+                    <canvas id="graficoModal"></canvas>
+                </div>
+                <div class="modal-actions">
+                    <button id="btnExportarGrafico"><i class="fas fa-file-pdf"></i> Exportar para PDF</button>
+                </div>
+                <div id="dadosGrafico" class="dados-tabela"></div>
+            </div>
+        </div>
+
         <!-- Toast Notification -->
         <div id="toast" class="toast">
             <i class="fas fa-check-circle"></i>
@@ -1185,6 +1277,7 @@
         let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         let currentPage = 1;
         const recordsPerPage = 10;
+        let graficoModal = null;
         
         // Elementos do DOM
         const loginScreen = document.getElementById('loginScreen');
@@ -1194,10 +1287,15 @@
         const modal = document.getElementById('modalDetalhes');
         const modalBackup = document.getElementById('modalBackup');
         const modalFornecedores = document.getElementById('modalFornecedores');
+        const modalGrafico = document.getElementById('modalGrafico');
         const modalTitulo = document.getElementById('modalTitulo');
         const modalConteudo = document.getElementById('modalConteudo');
         const modalFornecedoresTitulo = document.getElementById('modalFornecedoresTitulo');
         const modalFornecedoresConteudo = document.getElementById('modalFornecedoresConteudo');
+        const tituloGrafico = document.getElementById('tituloGrafico');
+        const graficoModalCanvas = document.getElementById('graficoModal');
+        const dadosGrafico = document.getElementById('dadosGrafico');
+        const btnExportarGrafico = document.getElementById('btnExportarGrafico');
         const closeModal = document.querySelectorAll('.close-modal');
         const btnAlternarAba = document.getElementById('btnAlternarAba');
         const abaCadastro = document.getElementById('abaCadastro');
@@ -1331,9 +1429,16 @@
                 tab.addEventListener('click', function() {
                     const tabId = this.dataset.tab;
                     
-                    // Atualizar tabs
-                    dashboardTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
+                    // Atualizar estilo das tabs
+                    dashboardTabs.forEach(t => {
+                        t.style.backgroundColor = 'var(--primary-light)';
+                        t.style.color = 'var(--primary-dark)';
+                        t.style.borderBottom = 'none';
+                    });
+                    
+                    this.style.backgroundColor = 'var(--primary)';
+                    this.style.color = 'white';
+                    this.style.borderBottom = '3px solid var(--secondary)';
                     
                     // Atualizar conteúdo
                     dashboardContents.forEach(content => {
@@ -2515,9 +2620,183 @@
                     `;
                 }
                 
+                // Configurar eventos de clique nos gráficos
+                setTimeout(configurarCliqueGraficos, 500);
+                
             } catch (error) {
                 console.error(`Erro ao atualizar dashboard ${tipo}:`, error);
             }
+        }
+
+        function configurarCliqueGraficos() {
+            document.querySelectorAll('.chart-container canvas').forEach(canvas => {
+                canvas.style.cursor = 'pointer';
+                canvas.addEventListener('click', function() {
+                    const chartId = this.id;
+                    const chart = window[chartId];
+                    
+                    if (chart) {
+                        mostrarDetalhesGrafico(chartId, chart);
+                    }
+                });
+            });
+        }
+
+        function mostrarDetalhesGrafico(chartId, chart) {
+            const modal = document.getElementById('modalGrafico');
+            const titulo = document.getElementById('tituloGrafico');
+            const canvasModal = document.getElementById('graficoModal');
+            const dadosTabela = document.getElementById('dadosGrafico');
+            
+            // Definir título baseado no tipo de gráfico
+            const tipoGrafico = chartId.includes('Federal') ? 'Federal' : 'Municipal';
+            let tituloGrafico = '';
+            
+            if (chartId.includes('strikesChart')) {
+                tituloGrafico = `Distribuição de Strikes - ${tipoGrafico}`;
+            } else if (chartId.includes('statusChart')) {
+                tituloGrafico = `Status dos Fornecedores - ${tipoGrafico}`;
+            } else if (chartId.includes('locaisChart')) {
+                tituloGrafico = `Locais com Mais Strikes - ${tipoGrafico}`;
+            } else if (chartId.includes('evolucaoChart')) {
+                tituloGrafico = `Evolução Mensal - ${tipoGrafico}`;
+            }
+            
+            titulo.textContent = tituloGrafico;
+            
+            // Destruir gráfico anterior no modal se existir
+            if (graficoModal) {
+                graficoModal.destroy();
+            }
+            
+            // Criar novo gráfico no modal
+            const ctx = canvasModal.getContext('2d');
+            graficoModal = new Chart(ctx, {
+                type: chart.config.type,
+                data: JSON.parse(JSON.stringify(chart.config.data)), // Deep copy
+                options: {
+                    ...chart.config.options,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        ...chart.config.options.plugins,
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Preencher tabela com dados
+            preencherTabelaDados(chart, dadosTabela);
+            
+            // Configurar botão de exportação
+            btnExportarGrafico.onclick = function() {
+                exportarGraficoPDF(tituloGrafico, chart);
+            };
+            
+            // Mostrar modal
+            modal.style.display = 'flex';
+        }
+
+        function preencherTabelaDados(chart, container) {
+            let html = '<table><thead><tr>';
+            const labels = chart.data.labels;
+            const datasets = chart.data.datasets;
+            
+            // Cabeçalho da tabela
+            html += '<th>Categoria</th>';
+            datasets.forEach(dataset => {
+                html += `<th>${dataset.label}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            // Dados da tabela
+            labels.forEach((label, i) => {
+                html += `<tr><td>${label}</td>`;
+                datasets.forEach(dataset => {
+                    const value = dataset.data[i] || 0;
+                    html += `<td>${value}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            // Totais (se aplicável)
+            if (chart.config.type === 'bar' || chart.config.type === 'line') {
+                html += '<tr><td><strong>Total</strong></td>';
+                datasets.forEach(dataset => {
+                    const total = dataset.data.reduce((a, b) => a + b, 0);
+                    html += `<td><strong>${total}</strong></td>`;
+                });
+                html += '</tr>';
+            }
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function exportarGraficoPDF(titulo, chart) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('pt-BR');
+            
+            // Criar conteúdo do PDF
+            const content = [
+                { text: titulo, style: 'header' },
+                { text: `Gerado em: ${dateStr}`, style: 'subheader' },
+                { text: '\n' },
+                { text: 'Resumo dos Dados', style: 'sectionHeader' },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', ...chart.data.datasets.map(() => '*')],
+                        body: [
+                            ['Categoria', ...chart.data.datasets.map(d => d.label)],
+                            ...chart.data.labels.map((label, i) => [
+                                label,
+                                ...chart.data.datasets.map(d => d.data[i] || 0)
+                            ]),
+                            ['Total', ...chart.data.datasets.map(d => d.data.reduce((a, b) => a + b, 0))]
+                        ]
+                    }
+                }
+            ];
+            
+            // Configuração do PDF
+            const docDefinition = {
+                content: content,
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 10]
+                    },
+                    subheader: {
+                        fontSize: 12,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 20]
+                    },
+                    sectionHeader: {
+                        fontSize: 14,
+                        bold: true,
+                        margin: [0, 10, 0, 5]
+                    }
+                }
+            };
+            
+            // Gerar PDF
+            pdfMake.createPdf(docDefinition).download(`relatorio_${titulo.replace(/ /g, '_')}.pdf`);
+            showToast('PDF gerado com sucesso!');
         }
 
         function getChartOptions() {
@@ -2528,6 +2807,30 @@
             return {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        labels: { 
+                            color: textColor,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 20
+                        }
+                    }
+                },
                 scales: {
                     x: {
                         grid: { color: gridColor },
@@ -2537,11 +2840,6 @@
                         grid: { color: gridColor },
                         ticks: { color: textColor },
                         beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: { color: textColor }
                     }
                 }
             };
