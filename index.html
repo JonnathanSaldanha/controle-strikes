@@ -264,6 +264,13 @@
             color: var(--text-color);
         }
 
+        /* Estilo específico para o campo Lei Complementar */
+        #leiComplementar {
+            max-width: 120px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--secondary);
@@ -889,8 +896,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="descricaoServico"><i class="fas fa-file-alt"></i> Descrição do Serviço:</label>
-                    <input type="text" id="descricaoServico" placeholder="Descreva o serviço prestado">
+                    <label for="leiComplementar"><i class="fas fa-hashtag"></i> Lei Complementar Federal 116:</label>
+                    <input type="text" id="leiComplementar" 
+                           pattern="[0-9]{2}\.[0-9]{2}" 
+                           title="Digite o código no formato 00.00 (ex: 07.10)"
+                           placeholder="Ex: 07.10">
+                    <div class="valid-feedback">Formato válido</div>
+                    <div class="invalid-feedback">Digite no formato NN.NN (ex: 07.10)</div>
                 </div>
                 
                 <div class="form-group">
@@ -911,7 +923,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="numeroServico"><i class="fas fa-hashtag"></i> N° Serviço V360:</label>
+                    <label for="numeroServico"><i class="fas fa-barcode"></i> N° Serviço V360:</label>
                     <input type="text" id="numeroServico" placeholder="Número do serviço no V360">
                 </div>
                 
@@ -1207,6 +1219,7 @@
         const btnAdvancedFilters = document.createElement('button');
         const advancedFiltersContainer = document.querySelector('.advanced-filters');
         const btnApplyAdvancedFilters = document.getElementById('applyAdvancedFilters');
+        const leiComplementarInput = document.getElementById('leiComplementar');
         
         // Inicialização do sistema
         document.addEventListener('DOMContentLoaded', function() {
@@ -1216,6 +1229,7 @@
             setupCNPJValidation();
             setupAdvancedFiltersButton();
             setupTooltips();
+            setupLeiComplementarValidation();
             
             if (isLoggedIn) {
                 renderizarTabela();
@@ -1401,6 +1415,30 @@
             });
         }
 
+        function setupLeiComplementarValidation() {
+            leiComplementarInput.addEventListener('input', function(e) {
+                // Remove tudo que não é dígito
+                let value = e.target.value.replace(/\D/g, '');
+                
+                // Formata como NN.NN
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '.' + value.substring(2, 4);
+                }
+                
+                // Limita a 5 caracteres (NN.NN)
+                e.target.value = value.substring(0, 5);
+                
+                // Valida o formato completo
+                if (value.length === 5) {
+                    e.target.classList.remove('is-invalid');
+                    e.target.classList.add('is-valid');
+                } else {
+                    e.target.classList.remove('is-valid');
+                    e.target.classList.add('is-invalid');
+                }
+            });
+        }
+
         function setupAutocomplete() {
             const fornecedorInput = document.getElementById('fornecedor');
             const localInput = document.getElementById('local');
@@ -1559,6 +1597,10 @@
                     content: 'Tipo de imposto relacionado ao fornecedor (federal ou municipal).'
                 },
                 {
+                    selector: '#leiComplementar',
+                    content: 'Código da Lei Complementar Federal 116 no formato NN.NN (ex: 07.10)'
+                },
+                {
                     selector: '#empresa',
                     content: 'Empresa do grupo Eletrobras à qual o fornecedor está vinculado.'
                 },
@@ -1595,7 +1637,7 @@
                 const nome = document.getElementById('fornecedor').value.trim();
                 const cnpj = document.getElementById('cnpj').value.replace(/\D/g, '');
                 const tipoFornecedor = document.getElementById('tipoFornecedor').value;
-                const descricaoServico = document.getElementById('descricaoServico').value.trim();
+                const leiComplementar = document.getElementById('leiComplementar').value.trim();
                 const empresa = document.getElementById('empresa').value;
                 const local = document.getElementById('local').value.trim();
                 const numeroServico = document.getElementById('numeroServico').value.trim();
@@ -1611,6 +1653,10 @@
                     throw new Error('CNPJ inválido!');
                 }
                 
+                if (!leiComplementar.match(/^\d{2}\.\d{2}$/)) {
+                    throw new Error('Lei Complementar deve estar no formato NN.NN (ex: 07.10)');
+                }
+                
                 // Formata MM-AAAA
                 const [ano, mes] = mesAno.split('-');
                 const mesAnoAtual = `${mes}-${ano}`;
@@ -1623,7 +1669,7 @@
                         fornecedores[fornecedorIndex].cnpj = cnpj;
                         fornecedores[fornecedorIndex].cnpjFormatado = formatarCNPJ(cnpj);
                         fornecedores[fornecedorIndex].tipo = tipoFornecedor;
-                        fornecedores[fornecedorIndex].descricaoServico = descricaoServico;
+                        fornecedores[fornecedorIndex].leiComplementar = leiComplementar;
                         fornecedores[fornecedorIndex].empresa = empresa;
                         fornecedores[fornecedorIndex].local = local;
                         fornecedores[fornecedorIndex].numeroServico = numeroServico;
@@ -1667,7 +1713,7 @@
                             cnpj,
                             cnpjFormatado: formatarCNPJ(cnpj),
                             tipo: tipoFornecedor,
-                            descricaoServico,
+                            leiComplementar,
                             empresa,
                             local,
                             numeroServico,
@@ -1922,7 +1968,7 @@
                 document.getElementById('fornecedor').value = fornecedor.nome;
                 document.getElementById('cnpj').value = fornecedor.cnpjFormatado;
                 document.getElementById('tipoFornecedor').value = fornecedor.tipo;
-                document.getElementById('descricaoServico').value = fornecedor.descricaoServico || '';
+                document.getElementById('leiComplementar').value = fornecedor.leiComplementar || '';
                 document.getElementById('empresa').value = fornecedor.empresa;
                 document.getElementById('local').value = fornecedor.local;
                 document.getElementById('numeroServico').value = fornecedor.numeroServico || '';
@@ -2004,9 +2050,7 @@
                     <div class="info-fornecedor">
                         <p><strong>CNPJ:</strong> ${fornecedor.cnpjFormatado}</p>
                         <p><strong>Tipo de Imposto:</strong> ${fornecedor.tipo}</p>
-                        ${fornecedor.descricaoServico 
-                            ? `<p><strong>Descrição do Serviço:</strong> ${fornecedor.descricaoServico}</p>` 
-                            : ''}
+                        <p><strong>Lei Complementar 116:</strong> ${fornecedor.leiComplementar || 'Não informado'}</p>
                         <p><strong>Empresa:</strong> ${fornecedor.empresa}</p>
                         <p><strong>N° Serviço V360:</strong> ${fornecedor.numeroServico || 'Não informado'}</p>
                         <p><strong>Total Strikes:</strong> ${fornecedor.strikes}/3</p>
@@ -2145,7 +2189,7 @@
                 document.getElementById('fornecedor').value = fornecedor.nome;
                 document.getElementById('cnpj').value = fornecedor.cnpjFormatado;
                 document.getElementById('tipoFornecedor').value = fornecedor.tipo;
-                document.getElementById('descricaoServico').value = fornecedor.descricaoServico || '';
+                document.getElementById('leiComplementar').value = fornecedor.leiComplementar || '';
                 document.getElementById('empresa').value = fornecedor.empresa;
                 document.getElementById('local').value = fornecedor.local;
                 document.getElementById('numeroServico').value = fornecedor.numeroServico || '';
@@ -2582,7 +2626,7 @@
                     if (!f.cnpjFormatado) f.cnpjFormatado = formatarCNPJ(f.cnpj);
                     if (!f.observacoes) f.observacoes = [];
                     if (!f.numeroServico) f.numeroServico = '';
-                    if (!f.descricaoServico) f.descricaoServico = '';
+                    if (!f.leiComplementar) f.leiComplementar = '';
                 });
                 
                 // Atualizar dados e UI
@@ -2616,13 +2660,13 @@
         function exportarParaExcel() {
             try {
                 // Criar CSV
-                let csv = 'Fornecedor;CNPJ;Tipo de Imposto;Descrição Serviço;Empresa;Local;N° Serviço V360;Strikes;Último Strike;Status\n';
+                let csv = 'Fornecedor;CNPJ;Tipo de Imposto;Lei Complementar 116;Empresa;Local;N° Serviço V360;Strikes;Último Strike;Status\n';
                 
                 fornecedores.forEach(fornecedor => {
                     const status = fornecedor.strikes >= 3 ? 'Bloqueado' : 
                                   fornecedor.strikes > 0 ? 'Atenção' : 'OK';
                     
-                    csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.tipo}";"${fornecedor.descricaoServico || ''}";"${fornecedor.empresa}";"${fornecedor.local}";` +
+                    csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.tipo}";"${fornecedor.leiComplementar || ''}";"${fornecedor.empresa}";"${fornecedor.local}";` +
                            `"${fornecedor.numeroServico || ''}";"${fornecedor.strikes}/3";"${fornecedor.ultimoStrike || 'Nenhum'}";"${status}"\n`;
                 });
                 
@@ -2660,6 +2704,7 @@
                                 cnpj: fornecedor.cnpjFormatado,
                                 local: fornecedor.local,
                                 empresa: fornecedor.empresa,
+                                leiComplementar: fornecedor.leiComplementar,
                                 observacao: obs.descricao,
                                 data: new Date(obs.data).toLocaleDateString('pt-BR')
                             });
@@ -2695,14 +2740,15 @@
                         { text: 'Observações Registradas no Mês', style: 'sectionHeader' },
                         {
                             table: {
-                                widths: ['*', '*', '*', '*', '*'],
+                                widths: ['*', '*', '*', '*', '*', '*'],
                                 body: [
-                                    ['Fornecedor', 'CNPJ', 'Local', 'Empresa', 'Observação'],
+                                    ['Fornecedor', 'CNPJ', 'Local', 'Empresa', 'Lei 116', 'Observação'],
                                     ...observacoesMes.map(obs => [
                                         obs.fornecedor, 
                                         obs.cnpj, 
                                         obs.local, 
-                                        obs.empresa, 
+                                        obs.empresa,
+                                        obs.leiComplementar || '-',
                                         { text: obs.observacao, italics: true }
                                     ])
                                 ]
