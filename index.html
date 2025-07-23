@@ -189,10 +189,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
 
         .dark-mode-toggle:hover {
             background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
 
         h1, h2, h3 {
@@ -228,10 +230,15 @@
 
         .aba {
             display: none;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
         .aba.ativa {
             display: block;
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .form-group {
@@ -259,7 +266,7 @@
             border-radius: 6px;
             font-family: inherit;
             font-size: 1rem;
-            transition: border 0.3s;
+            transition: border 0.3s, box-shadow 0.3s;
             background-color: var(--input-bg);
             color: var(--text-color);
         }
@@ -292,16 +299,24 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         button:hover {
             opacity: 0.9;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         button:active {
             transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
         }
 
         #btnSalvar {
@@ -330,6 +345,7 @@
             font-size: 0.85rem;
             font-weight: bold;
             display: inline-block;
+            transition: all 0.3s ease;
         }
 
         .status-badge.success {
@@ -360,6 +376,7 @@
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--medium-gray);
+            transition: background-color 0.3s ease;
         }
 
         th {
@@ -397,6 +414,7 @@
             padding: 8px 12px;
             font-size: 0.9rem;
             min-width: 32px;
+            transition: all 0.2s ease;
         }
 
         .btn-detalhes {
@@ -431,6 +449,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
@@ -444,6 +463,12 @@
             box-shadow: 0 5px 15px var(--shadow-color);
             position: relative;
             border-top: 4px solid var(--secondary);
+            animation: modalFadeIn 0.4s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .close-modal {
@@ -460,10 +485,12 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            transition: all 0.3s ease;
         }
 
         .close-modal:hover {
             color: var(--danger);
+            transform: rotate(90deg);
         }
 
         /* Dashboard */
@@ -482,6 +509,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border-left: 4px solid var(--secondary);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .dashboard-card:hover {
@@ -505,11 +533,11 @@
             height: 250px;
             width: 100%;
             cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
         .chart-container:hover {
             transform: scale(1.01);
-            transition: transform 0.3s ease;
         }
 
         /* Filtros na tabela */
@@ -522,6 +550,7 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             border: 1px solid var(--medium-gray);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .dark-mode .table-filters {
@@ -562,6 +591,10 @@
             color: var(--dark-gray);
         }
 
+        .toast.info {
+            background-color: var(--primary);
+        }
+
         .toast i {
             font-size: 1.2rem;
         }
@@ -575,6 +608,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 15px var(--shadow-color);
             border-top: 4px solid var(--secondary);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .login-title {
@@ -597,6 +631,7 @@
             background-color: var(--light-gray);
             border-radius: 8px;
             border: 1px solid var(--medium-gray);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .dark-mode .backup-section {
@@ -640,6 +675,7 @@
         /* Ícones */
         .fas {
             color: var(--secondary);
+            transition: transform 0.3s ease;
         }
 
         .dark-mode .fas {
@@ -662,6 +698,7 @@
             padding: 15px;
             background-color: var(--light-gray);
             border-radius: 6px;
+            animation: fadeIn 0.5s ease-out;
         }
         
         .dark-mode .outras-observacoes {
@@ -672,6 +709,22 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: rgba(0,0,0,0.05);
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode .observacao-repetida {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .observacao-repetida:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .observacao-repetida:hover {
+            background-color: rgba(255,255,255,0.1);
         }
 
         /* Estilos para ações de observações */
@@ -686,6 +739,7 @@
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .btn-editar-obs {
@@ -693,9 +747,17 @@
             color: black;
         }
 
+        .btn-editar-obs:hover {
+            background-color: #e0a800;
+        }
+
         .btn-excluir-obs {
             background-color: var(--danger);
             color: white;
+        }
+
+        .btn-excluir-obs:hover {
+            background-color: #c82333;
         }
 
         /* Filtro de data */
@@ -704,6 +766,7 @@
             padding: 10px;
             background-color: var(--light-gray);
             border-radius: 6px;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .dark-mode .filtro-data {
@@ -716,6 +779,7 @@
             justify-content: center;
             margin-top: 20px;
             gap: 5px;
+            animation: fadeIn 0.5s ease-out;
         }
         
         .pagination button {
@@ -725,6 +789,7 @@
             color: var(--text-color);
             cursor: pointer;
             border-radius: 4px;
+            transition: all 0.3s ease;
         }
         
         .pagination button.active {
@@ -736,6 +801,7 @@
         .pagination button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
 
         /* Tooltips */
@@ -785,6 +851,7 @@
             max-height: 300px;
             overflow-y: auto;
             margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .dados-tabela table {
@@ -811,6 +878,53 @@
         .dashboard-tab:hover {
             transform: translateY(-2px);
             box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        /* Loader e animações */
+        .loader-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--primary-light);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutDown {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+
+        .smooth-transition {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-20px); }
         }
 
         /* Responsivo */
@@ -1278,6 +1392,7 @@
         let currentPage = 1;
         const recordsPerPage = 10;
         let graficoModal = null;
+        let isLoading = false;
         
         // Elementos do DOM
         const loginScreen = document.getElementById('loginScreen');
@@ -1367,22 +1482,41 @@
                 const username = document.getElementById('loginUsername').value;
                 const password = document.getElementById('loginPassword').value;
                 
-                if (username === 'admin' && password === 'admin123') {
-                    isLoggedIn = true;
-                    localStorage.setItem('isLoggedIn', 'true');
-                    checkAuth();
-                    showToast('Login realizado com sucesso!');
-                } else {
-                    showToast('Usuário ou senha incorretos', 'error');
-                }
+                btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+                btnLogin.disabled = true;
+                
+                setTimeout(() => {
+                    if (username === 'admin' && password === 'admin123') {
+                        isLoggedIn = true;
+                        localStorage.setItem('isLoggedIn', 'true');
+                        checkAuth();
+                        showToast('Login realizado com sucesso!');
+                        btnLogin.innerHTML = '<i class="fas fa-check"></i> Sucesso!';
+                        setTimeout(() => {
+                            btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+                            btnLogin.disabled = false;
+                        }, 1000);
+                    } else {
+                        showToast('Usuário ou senha incorretos', 'error');
+                        btnLogin.innerHTML = '<i class="fas fa-times"></i> Erro';
+                        setTimeout(() => {
+                            btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+                            btnLogin.disabled = false;
+                        }, 1000);
+                    }
+                }, 800);
             });
             
             // Logout
             btnLogout.addEventListener('click', function() {
-                isLoggedIn = false;
-                localStorage.removeItem('isLoggedIn');
-                checkAuth();
-                showToast('Logout realizado com sucesso!');
+                btnLogout.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saindo...';
+                setTimeout(() => {
+                    isLoggedIn = false;
+                    localStorage.removeItem('isLoggedIn');
+                    checkAuth();
+                    showToast('Logout realizado com sucesso!');
+                    btnLogout.innerHTML = '<i class="fas fa-sign-out-alt"></i> Sair';
+                }, 800);
             });
             
             // Dark mode toggle
@@ -1410,17 +1544,23 @@
                 updateChartTheme(window.evolucaoChartMunicipal);
             });
             
-            // Alternar abas
+            // Alternar abas com animação
             btnAlternarAba.addEventListener('click', function() {
                 if (abaCadastro.classList.contains('ativa')) {
-                    abaCadastro.classList.remove('ativa');
-                    abaDashboard.classList.add('ativa');
-                    btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Voltar para Cadastro';
-                    atualizarDashboard();
+                    abaCadastro.classList.add('fade-out');
+                    setTimeout(() => {
+                        abaCadastro.classList.remove('ativa', 'fade-out');
+                        abaDashboard.classList.add('ativa', 'fade-in');
+                        btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Voltar para Cadastro';
+                        atualizarDashboard();
+                    }, 300);
                 } else {
-                    abaCadastro.classList.add('ativa');
-                    abaDashboard.classList.remove('ativa');
-                    btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Ver Dashboard';
+                    abaDashboard.classList.add('fade-out');
+                    setTimeout(() => {
+                        abaDashboard.classList.remove('ativa', 'fade-out');
+                        abaCadastro.classList.add('ativa', 'fade-in');
+                        btnAlternarAba.innerHTML = '<i class="fas fa-exchange-alt"></i> Ver Dashboard';
+                    }, 300);
                 }
             });
             
@@ -1440,11 +1580,12 @@
                     this.style.color = 'white';
                     this.style.borderBottom = '3px solid var(--secondary)';
                     
-                    // Atualizar conteúdo
+                    // Atualizar conteúdo com animação
                     dashboardContents.forEach(content => {
                         content.style.display = 'none';
                         if (content.id === `dashboard${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`) {
                             content.style.display = 'block';
+                            content.classList.add('fade-in');
                         }
                     });
                 });
@@ -1737,8 +1878,237 @@
             });
         }
 
+        function renderizarTabela() {
+            try {
+                tabela.innerHTML = '';
+                
+                // Aplicar filtros básicos
+                let fornecedoresFiltrados = [...fornecedores];
+                
+                const filtroNome = normalizarTexto(document.getElementById('filtroFornecedor').value);
+                const filtroLocalText = normalizarTexto(document.getElementById('filtroLocal').value);
+                const filtroEmpresaValue = document.getElementById('filtroEmpresa').value;
+                const filtroTipoValue = document.getElementById('filtroTipo').value;
+                const filtroStatusValue = document.getElementById('filtroStatus').value;
+                
+                // Aplicar filtros avançados
+                const minStrikes = document.getElementById('filterMinStrikes').checked ? 
+                    parseInt(document.getElementById('minStrikes').value) : 0;
+                const maxStrikes = document.getElementById('filterMaxStrikes').checked ? 
+                    parseInt(document.getElementById('maxStrikes').value) : 3;
+                
+                fornecedoresFiltrados = fornecedoresFiltrados.filter(fornecedor => {
+                    // Filtros básicos
+                    if (filtroNome && !normalizarTexto(fornecedor.nome).includes(filtroNome)) {
+                        return false;
+                    }
+                    
+                    if (filtroLocalText && !normalizarTexto(fornecedor.local).includes(filtroLocalText)) {
+                        return false;
+                    }
+                    
+                    if (filtroEmpresaValue !== 'todos' && fornecedor.empresa !== filtroEmpresaValue) {
+                        return false;
+                    }
+                    
+                    if (filtroTipoValue !== 'todos' && fornecedor.tipo !== filtroTipoValue) {
+                        return false;
+                    }
+                    
+                    if (filtroStatusValue !== 'todos') {
+                        if (filtroStatusValue === 'ok' && fornecedor.strikes !== 0) {
+                            return false;
+                        }
+                        if (filtroStatusValue === 'atencao' && (fornecedor.strikes === 0 || fornecedor.strikes >= 3)) {
+                            return false;
+                        }
+                        if (filtroStatusValue === 'bloqueado' && fornecedor.strikes < 3) {
+                            return false;
+                        }
+                    }
+                    
+                    // Filtros avançados
+                    if (fornecedor.strikes < minStrikes || fornecedor.strikes > maxStrikes) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                // Ordenar
+                fornecedoresFiltrados.sort((a, b) => b.strikes - a.strikes);
+                
+                // Virtualização de dados - renderizar apenas os itens visíveis
+                const containerHeight = document.querySelector('.lista-fornecedores').clientHeight;
+                const rowHeight = 50; // Altura estimada de cada linha
+                const visibleRows = Math.ceil(containerHeight / rowHeight);
+                
+                const startIndex = Math.max(0, (currentPage - 1) * recordsPerPage);
+                const endIndex = Math.min(startIndex + visibleRows, startIndex + recordsPerPage);
+                
+                const fragment = document.createDocumentFragment();
+                
+                fornecedoresFiltrados.slice(startIndex, endIndex).forEach((fornecedor, index) => {
+                    const tr = document.createElement('tr');
+                    tr.dataset.index = startIndex + index;
+                    
+                    // Estilo baseado nos strikes
+                    if (fornecedor.strikes >= 3) {
+                        tr.classList.add('strike-max');
+                    } else if (fornecedor.strikes > 0) {
+                        tr.classList.add('strike-warning');
+                    }
+                    
+                    // Adiciona data-label para responsividade
+                    tr.innerHTML = `
+                        <td data-label="Fornecedor">${fornecedor.nome}</td>
+                        <td data-label="CNPJ">${fornecedor.cnpjFormatado}</td>
+                        <td data-label="Local">${fornecedor.local}</td>
+                        <td data-label="Empresa">${fornecedor.empresa}</td>
+                        <td data-label="Tipo de Imposto">${fornecedor.tipo}</td>
+                        <td data-label="Strikes">${fornecedor.strikes}/3</td>
+                        <td data-label="Status">
+                            ${fornecedor.strikes >= 3 
+                                ? '<span class="status-badge danger">Bloqueado</span>' 
+                                : fornecedor.strikes > 0 
+                                    ? '<span class="status-badge warning">Atenção</span>' 
+                                    : '<span class="status-badge success">OK</span>'}
+                        </td>
+                        <td data-label="Ações" class="acoes">
+                            <button class="btn-editar" data-id="${fornecedor.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-excluir" data-id="${fornecedor.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn-detalhes" data-id="${fornecedor.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    fragment.appendChild(tr);
+                });
+                
+                tabela.appendChild(fragment);
+                
+                // Configurar observador de interseção para lazy loading
+                setupIntersectionObserver();
+                
+                // Atualizar paginação
+                const paginationContainer = document.getElementById('paginationContainer');
+                paginationContainer.innerHTML = '';
+                
+                const totalPages = Math.ceil(fornecedoresFiltrados.length / recordsPerPage);
+                
+                if (totalPages > 1) {
+                    const pagination = document.createElement('div');
+                    pagination.className = 'pagination';
+                    
+                    let html = `
+                        <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(1)">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                    `;
+                    
+                    // Mostrar até 5 páginas ao redor da atual
+                    const startPage = Math.max(1, currentPage - 2);
+                    const endPage = Math.min(totalPages, currentPage + 2);
+                    
+                    for (let i = startPage; i <= endPage; i++) {
+                        html += `<button ${i === currentPage ? 'class="active"' : ''} onclick="changePage(${i})">${i}</button>`;
+                    }
+                    
+                    html += `
+                        <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${totalPages})">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                        <span style="margin-left: 10px;">Total: ${fornecedoresFiltrados.length} registros</span>
+                    `;
+                    
+                    pagination.innerHTML = html;
+                    paginationContainer.appendChild(pagination);
+                }
+                
+                // Adicionar ícones de criticidade
+                addCriticalIcons();
+                
+            } catch (error) {
+                handleError(error, 'Renderização da tabela');
+            }
+        }
+
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const rowIndex = parseInt(entry.target.dataset.index);
+                        if (rowIndex >= currentPage * recordsPerPage - 10) {
+                            loadMoreData();
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            // Observar as últimas linhas da tabela
+            const rows = tabela.querySelectorAll('tr');
+            if (rows.length > 0) {
+                observer.observe(rows[rows.length - 1]);
+            }
+        }
+
+        function loadMoreData() {
+            if (isLoading) return;
+            
+            isLoading = true;
+            currentPage++;
+            
+            // Mostrar spinner de carregamento
+            const loader = document.createElement('tr');
+            loader.id = 'loading-row';
+            loader.innerHTML = `<td colspan="8" style="text-align: center;">
+                <div class="loader-spinner"></div>
+            </td>`;
+            tabela.appendChild(loader);
+            
+            // Simular carregamento assíncrono
+            setTimeout(() => {
+                renderizarTabela();
+                isLoading = false;
+            }, 300);
+        }
+
+        function addCriticalIcons() {
+            const criticalIcon = document.createElement('i');
+            criticalIcon.className = 'fas fa-exclamation-triangle';
+            criticalIcon.style.color = 'var(--danger)';
+            criticalIcon.style.marginLeft = '5px';
+            criticalIcon.title = 'Fornecedor crítico - atenção necessária';
+            
+            document.querySelectorAll('#tabelaFornecedores tr').forEach(tr => {
+                const strikesCell = tr.querySelector('td:nth-child(6)');
+                if (strikesCell && parseInt(strikesCell.textContent) >= 2) {
+                    const nomeCell = tr.querySelector('td:first-child');
+                    if (nomeCell && !nomeCell.querySelector('.fa-exclamation-triangle')) {
+                        const clone = criticalIcon.cloneNode(true);
+                        nomeCell.appendChild(clone);
+                    }
+                }
+            });
+        }
+
         function salvarFornecedor() {
             try {
+                // Mostrar feedback visual durante o processamento
+                btnSalvar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+                btnSalvar.disabled = true;
+                
                 const nome = document.getElementById('fornecedor').value.trim();
                 const cnpj = document.getElementById('cnpj').value.replace(/\D/g, '');
                 const tipoFornecedor = document.getElementById('tipoFornecedor').value;
@@ -1758,7 +2128,7 @@
                     throw new Error('CNPJ inválido!');
                 }
                 
-                if (!leiComplementar.match(/^\d{2}\.\d{2}$/)) {
+                if (leiComplementar && !leiComplementar.match(/^\d{2}\.\d{2}$/)) {
                     throw new Error('Lei Complementar deve estar no formato NN.NN (ex: 07.10)');
                 }
                 
@@ -1863,205 +2233,25 @@
                 // Limpa o formulário
                 form.reset();
                 
+                // Feedback visual após conclusão
+                btnSalvar.innerHTML = '<i class="fas fa-check"></i> Sucesso!';
+                setTimeout(() => {
+                    btnSalvar.innerHTML = '<i class="fas fa-save"></i> ' + 
+                        (editandoId ? 'Atualizar Fornecedor' : 
+                         editandoObservacaoId ? 'Atualizar Observação' : 'Registrar Observação');
+                    btnSalvar.disabled = false;
+                }, 1000);
+                
             } catch (error) {
+                btnSalvar.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro';
+                setTimeout(() => {
+                    btnSalvar.innerHTML = '<i class="fas fa-save"></i> ' + 
+                        (editandoId ? 'Atualizar Fornecedor' : 
+                         editandoObservacaoId ? 'Atualizar Observação' : 'Registrar Observação');
+                    btnSalvar.disabled = false;
+                }, 1500);
                 handleError(error, 'Cadastro de fornecedor');
             }
-        }
-
-        function renderizarTabela() {
-            try {
-                tabela.innerHTML = '';
-                
-                // Aplicar filtros básicos
-                let fornecedoresFiltrados = [...fornecedores];
-                
-                const filtroNome = normalizarTexto(document.getElementById('filtroFornecedor').value);
-                const filtroLocalText = normalizarTexto(document.getElementById('filtroLocal').value);
-                const filtroEmpresaValue = document.getElementById('filtroEmpresa').value;
-                const filtroTipoValue = document.getElementById('filtroTipo').value;
-                const filtroStatusValue = document.getElementById('filtroStatus').value;
-                
-                // Aplicar filtros avançados
-                const minStrikes = document.getElementById('filterMinStrikes').checked ? 
-                    parseInt(document.getElementById('minStrikes').value) : 0;
-                const maxStrikes = document.getElementById('filterMaxStrikes').checked ? 
-                    parseInt(document.getElementById('maxStrikes').value) : 3;
-                
-                fornecedoresFiltrados = fornecedoresFiltrados.filter(fornecedor => {
-                    // Filtros básicos
-                    if (filtroNome && !normalizarTexto(fornecedor.nome).includes(filtroNome)) {
-                        return false;
-                    }
-                    
-                    if (filtroLocalText && !normalizarTexto(fornecedor.local).includes(filtroLocalText)) {
-                        return false;
-                    }
-                    
-                    if (filtroEmpresaValue !== 'todos' && fornecedor.empresa !== filtroEmpresaValue) {
-                        return false;
-                    }
-                    
-                    if (filtroTipoValue !== 'todos' && fornecedor.tipo !== filtroTipoValue) {
-                        return false;
-                    }
-                    
-                    if (filtroStatusValue !== 'todos') {
-                        if (filtroStatusValue === 'ok' && fornecedor.strikes !== 0) {
-                            return false;
-                        }
-                        if (filtroStatusValue === 'atencao' && (fornecedor.strikes === 0 || fornecedor.strikes >= 3)) {
-                            return false;
-                        }
-                        if (filtroStatusValue === 'bloqueado' && fornecedor.strikes < 3) {
-                            return false;
-                        }
-                    }
-                    
-                    // Filtros avançados
-                    if (fornecedor.strikes < minStrikes || fornecedor.strikes > maxStrikes) {
-                        return false;
-                    }
-                    
-                    return true;
-                });
-                
-                // Ordenar
-                fornecedoresFiltrados.sort((a, b) => b.strikes - a.strikes);
-                
-                // Paginar
-                const totalPages = Math.ceil(fornecedoresFiltrados.length / recordsPerPage);
-                const startIndex = (currentPage - 1) * recordsPerPage;
-                const endIndex = Math.min(startIndex + recordsPerPage, fornecedoresFiltrados.length);
-                const fornecedoresPagina = fornecedoresFiltrados.slice(startIndex, endIndex);
-                
-                // Renderizar
-                fornecedoresPagina.forEach(fornecedor => {
-                    const tr = document.createElement('tr');
-                    
-                    // Estilo baseado nos strikes
-                    if (fornecedor.strikes >= 3) {
-                        tr.classList.add('strike-max');
-                    } else if (fornecedor.strikes > 0) {
-                        tr.classList.add('strike-warning');
-                    }
-                    
-                    // Adiciona data-label para responsividade
-                    tr.innerHTML = `
-                        <td data-label="Fornecedor">${fornecedor.nome}</td>
-                        <td data-label="CNPJ">${fornecedor.cnpjFormatado}</td>
-                        <td data-label="Local">${fornecedor.local}</td>
-                        <td data-label="Empresa">${fornecedor.empresa}</td>
-                        <td data-label="Tipo de Imposto">${fornecedor.tipo}</td>
-                        <td data-label="Strikes">${fornecedor.strikes}/3</td>
-                        <td data-label="Status">
-                            ${fornecedor.strikes >= 3 
-                                ? '<span class="status-badge danger">Bloqueado</span>' 
-                                : fornecedor.strikes > 0 
-                                    ? '<span class="status-badge warning">Atenção</span>' 
-                                    : '<span class="status-badge success">OK</span>'}
-                        </td>
-                        <td data-label="Ações" class="acoes">
-                            <button class="btn-editar" data-id="${fornecedor.id}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-excluir" data-id="${fornecedor.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <button class="btn-detalhes" data-id="${fornecedor.id}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    `;
-                    
-                    tabela.appendChild(tr);
-                });
-                
-                // Adicionar eventos aos botões
-                document.querySelectorAll('.btn-editar').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        editarFornecedor(e.currentTarget.dataset.id);
-                    });
-                });
-                
-                document.querySelectorAll('.btn-excluir').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        excluirFornecedor(e.currentTarget.dataset.id);
-                    });
-                });
-                
-                document.querySelectorAll('.btn-detalhes').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        mostrarDetalhes(e.currentTarget.dataset.id);
-                    });
-                });
-                
-                // Atualizar paginação
-                const paginationContainer = document.getElementById('paginationContainer');
-                paginationContainer.innerHTML = '';
-                
-                if (totalPages > 1) {
-                    const pagination = document.createElement('div');
-                    pagination.className = 'pagination';
-                    
-                    let html = `
-                        <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(1)">
-                            <i class="fas fa-angle-double-left"></i>
-                        </button>
-                        <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
-                            <i class="fas fa-angle-left"></i>
-                        </button>
-                    `;
-                    
-                    // Mostrar até 5 páginas ao redor da atual
-                    const startPage = Math.max(1, currentPage - 2);
-                    const endPage = Math.min(totalPages, currentPage + 2);
-                    
-                    for (let i = startPage; i <= endPage; i++) {
-                        html += `<button ${i === currentPage ? 'class="active"' : ''} onclick="changePage(${i})">${i}</button>`;
-                    }
-                    
-                    html += `
-                        <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
-                            <i class="fas fa-angle-right"></i>
-                        </button>
-                        <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${totalPages})">
-                            <i class="fas fa-angle-double-right"></i>
-                        </button>
-                        <span style="margin-left: 10px;">Total: ${fornecedoresFiltrados.length} registros</span>
-                    `;
-                    
-                    pagination.innerHTML = html;
-                    paginationContainer.appendChild(pagination);
-                }
-                
-                // Adicionar ícones de criticidade
-                addCriticalIcons();
-                
-            } catch (error) {
-                handleError(error, 'Renderização da tabela');
-            }
-        }
-
-        function addCriticalIcons() {
-            const criticalIcon = document.createElement('i');
-            criticalIcon.className = 'fas fa-exclamation-triangle';
-            criticalIcon.style.color = 'var(--danger)';
-            criticalIcon.style.marginLeft = '5px';
-            criticalIcon.title = 'Fornecedor crítico - atenção necessária';
-            
-            document.querySelectorAll('#tabelaFornecedores tr').forEach(tr => {
-                const strikesCell = tr.querySelector('td:nth-child(6)');
-                if (strikesCell && parseInt(strikesCell.textContent) >= 2) {
-                    const nomeCell = tr.querySelector('td:first-child');
-                    if (nomeCell && !nomeCell.querySelector('.fa-exclamation-triangle')) {
-                        const clone = criticalIcon.cloneNode(true);
-                        nomeCell.appendChild(clone);
-                    }
-                }
-            });
         }
 
         function editarFornecedor(id) {
@@ -2086,6 +2276,7 @@
                 
                 // Rola para o formulário
                 document.getElementById('fornecedor').focus();
+                document.getElementById('fornecedor').scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
                 handleError(error, 'Edição de fornecedor');
             }
@@ -2312,6 +2503,7 @@
                 
                 // Rola para o formulário
                 document.getElementById('observacao').focus();
+                document.getElementById('observacao').scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
                 handleError(error, 'Edição de observação');
             }
@@ -2870,70 +3062,103 @@
 
         function criarBackup() {
             try {
-                const backupData = JSON.stringify(fornecedores);
-                navigator.clipboard.writeText(backupData).then(() => {
-                    showToast('Backup copiado para a área de transferência!');
-                }).catch(err => {
-                    // Fallback para navegadores sem suporte a clipboard
-                    const textarea = document.createElement('textarea');
-                    textarea.value = backupData;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    showToast('Backup copiado para a área de transferência!');
-                });
+                btnBackup.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando...';
+                
+                setTimeout(() => {
+                    const backupData = JSON.stringify(fornecedores);
+                    navigator.clipboard.writeText(backupData).then(() => {
+                        showToast('Backup copiado para a área de transferência!');
+                        btnBackup.innerHTML = '<i class="fas fa-check"></i> Sucesso!';
+                        setTimeout(() => {
+                            btnBackup.innerHTML = '<i class="fas fa-file-export"></i> Criar Backup';
+                        }, 1000);
+                    }).catch(err => {
+                        // Fallback para navegadores sem suporte a clipboard
+                        const textarea = document.createElement('textarea');
+                        textarea.value = backupData;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showToast('Backup copiado para a área de transferência!');
+                        btnBackup.innerHTML = '<i class="fas fa-check"></i> Sucesso!';
+                        setTimeout(() => {
+                            btnBackup.innerHTML = '<i class="fas fa-file-export"></i> Criar Backup';
+                        }, 1000);
+                    });
+                }, 500);
             } catch (error) {
+                btnBackup.innerHTML = '<i class="fas fa-times"></i> Erro';
+                setTimeout(() => {
+                    btnBackup.innerHTML = '<i class="fas fa-file-export"></i> Criar Backup';
+                }, 1000);
                 handleError(error, 'Criação de backup');
             }
         }
 
         function restaurarBackup() {
             try {
-                const backupData = document.getElementById('backupData').value;
-                const backupMode = document.querySelector('input[name="backupMode"]:checked').value;
-                const parsedData = JSON.parse(backupData);
+                btnConfirmRestore.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+                btnConfirmRestore.disabled = true;
                 
-                validarDadosBackup(parsedData);
-                
-                if (backupMode === 'replace') {
-                    if (!confirm('ATENÇÃO: Isso substituirá TODOS os dados atuais. Deseja continuar?')) {
-                        return;
+                setTimeout(() => {
+                    const backupData = document.getElementById('backupData').value;
+                    const backupMode = document.querySelector('input[name="backupMode"]:checked').value;
+                    const parsedData = JSON.parse(backupData);
+                    
+                    validarDadosBackup(parsedData);
+                    
+                    if (backupMode === 'replace') {
+                        if (!confirm('ATENÇÃO: Isso substituirá TODOS os dados atuais. Deseja continuar?')) {
+                            btnConfirmRestore.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar Restauração';
+                            btnConfirmRestore.disabled = false;
+                            return;
+                        }
+                        
+                        fornecedores = parsedData;
+                        showToast('Backup substituído com sucesso!', 'success');
+                    } 
+                    else { // Modo merge
+                        const newIds = new Set(fornecedores.map(f => f.id));
+                        const novosFornecedores = parsedData.filter(f => !newIds.has(f.id));
+                        
+                        if (novosFornecedores.length === 0) {
+                            showToast('Nenhum novo fornecedor encontrado no backup para adicionar', 'warning');
+                            btnConfirmRestore.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar Restauração';
+                            btnConfirmRestore.disabled = false;
+                            return;
+                        }
+                        
+                        fornecedores.push(...novosFornecedores);
+                        showToast(`Backup mesclado: ${novosFornecedores.length} novos registros adicionados`, 'success');
                     }
-                    
-                    fornecedores = parsedData;
-                    showToast('Backup substituído com sucesso!', 'success');
-                } 
-                else { // Modo merge
-                    const newIds = new Set(fornecedores.map(f => f.id));
-                    const novosFornecedores = parsedData.filter(f => !newIds.has(f.id));
-                    
-                    if (novosFornecedores.length === 0) {
-                        showToast('Nenhum novo fornecedor encontrado no backup para adicionar', 'warning');
-                        return;
-                    }
-                    
-                    fornecedores.push(...novosFornecedores);
-                    showToast(`Backup mesclado: ${novosFornecedores.length} novos registros adicionados`, 'success');
-                }
 
-                // Garantir que fornecedores tenham todos os campos necessários
-                fornecedores.forEach(f => {
-                    if (!f.tipo) f.tipo = 'FEDERAL';
-                    if (!f.empresa) f.empresa = 'OUTRA';
-                    if (!f.cnpjFormatado) f.cnpjFormatado = formatarCNPJ(f.cnpj);
-                    if (!f.observacoes) f.observacoes = [];
-                    if (!f.numeroServico) f.numeroServico = '';
-                    if (!f.leiComplementar) f.leiComplementar = '';
-                });
-                
-                // Atualizar dados e UI
-                localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
-                renderizarTabela();
-                atualizarDashboard();
-                modalBackup.style.display = 'none';
+                    // Garantir que fornecedores tenham todos os campos necessários
+                    fornecedores.forEach(f => {
+                        if (!f.tipo) f.tipo = 'FEDERAL';
+                        if (!f.empresa) f.empresa = 'OUTRA';
+                        if (!f.cnpjFormatado) f.cnpjFormatado = formatarCNPJ(f.cnpj);
+                        if (!f.observacoes) f.observacoes = [];
+                        if (!f.numeroServico) f.numeroServico = '';
+                        if (!f.leiComplementar) f.leiComplementar = '';
+                    });
+                    
+                    // Atualizar dados e UI
+                    localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
+                    renderizarTabela();
+                    atualizarDashboard();
+                    modalBackup.style.display = 'none';
+                    
+                    btnConfirmRestore.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar Restauração';
+                    btnConfirmRestore.disabled = false;
+                }, 800);
                 
             } catch (error) {
+                btnConfirmRestore.innerHTML = '<i class="fas fa-times"></i> Erro';
+                setTimeout(() => {
+                    btnConfirmRestore.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar Restauração';
+                    btnConfirmRestore.disabled = false;
+                }, 1000);
                 handleError(error, 'Restauração de backup');
             }
         }
@@ -2957,139 +3182,183 @@
 
         function exportarParaExcel() {
             try {
-                // Criar CSV
-                let csv = 'Fornecedor;CNPJ;Tipo de Imposto;Lei Complementar 116;Empresa;Local;N° Serviço V360;Strikes;Último Strike;Status\n';
+                btnExport.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exportando...';
                 
-                fornecedores.forEach(fornecedor => {
-                    const status = fornecedor.strikes >= 3 ? 'Bloqueado' : 
-                                  fornecedor.strikes > 0 ? 'Atenção' : 'OK';
+                setTimeout(() => {
+                    // Criar CSV
+                    let csv = 'Fornecedor;CNPJ;Tipo de Imposto;Lei Complementar 116;Empresa;Local;N° Serviço V360;Strikes;Último Strike;Status\n';
                     
-                    csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.tipo}";"${fornecedor.leiComplementar || ''}";"${fornecedor.empresa}";"${fornecedor.local}";` +
-                           `"${fornecedor.numeroServico || ''}";"${fornecedor.strikes}/3";"${fornecedor.ultimoStrike || 'Nenhum'}";"${status}"\n`;
-                });
-                
-                // Criar link de download
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `fornecedores_${new Date().toISOString().slice(0,10)}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                showToast('Exportação para CSV realizada com sucesso!');
+                    fornecedores.forEach(fornecedor => {
+                        const status = fornecedor.strikes >= 3 ? 'Bloqueado' : 
+                                      fornecedor.strikes > 0 ? 'Atenção' : 'OK';
+                        
+                        csv += `"${fornecedor.nome}";"${fornecedor.cnpjFormatado}";"${fornecedor.tipo}";"${fornecedor.leiComplementar || ''}";"${fornecedor.empresa}";"${fornecedor.local}";` +
+                               `"${fornecedor.numeroServico || ''}";"${fornecedor.strikes}/3";"${fornecedor.ultimoStrike || 'Nenhum'}";"${status}"\n`;
+                    });
+                    
+                    // Criar link de download
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `fornecedores_${new Date().toISOString().slice(0,10)}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    showToast('Exportação para CSV realizada com sucesso!');
+                    btnExport.innerHTML = '<i class="fas fa-check"></i> Sucesso!';
+                    setTimeout(() => {
+                        btnExport.innerHTML = '<i class="fas fa-file-excel"></i> Exportar para Excel';
+                    }, 1000);
+                }, 500);
             } catch (error) {
+                btnExport.innerHTML = '<i class="fas fa-times"></i> Erro';
+                setTimeout(() => {
+                    btnExport.innerHTML = '<i class="fas fa-file-excel"></i> Exportar para Excel';
+                }, 1000);
                 handleError(error, 'Exportação para CSV');
             }
         }
 
         function generateMonthlyReport() {
             try {
-                const now = new Date();
-                const month = now.getMonth() + 1;
-                const year = now.getFullYear();
+                btnGenerateReport.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
                 
-                // Filtrar observações do mês atual
-                const mesAno = `${month.toString().padStart(2, '0')}-${year}`;
-                const observacoesMes = [];
-                
-                fornecedores.forEach(fornecedor => {
-                    fornecedor.observacoes.forEach(obs => {
-                        if (obs.mesAno === mesAno) {
-                            observacoesMes.push({
-                                fornecedor: fornecedor.nome,
-                                cnpj: fornecedor.cnpjFormatado,
-                                local: fornecedor.local,
-                                empresa: fornecedor.empresa,
-                                leiComplementar: fornecedor.leiComplementar,
-                                observacao: obs.descricao,
-                                data: new Date(obs.data).toLocaleDateString('pt-BR')
-                            });
-                        }
+                setTimeout(() => {
+                    const now = new Date();
+                    const month = now.getMonth() + 1;
+                    const year = now.getFullYear();
+                    
+                    // Filtrar observações do mês atual
+                    const mesAno = `${month.toString().padStart(2, '0')}-${year}`;
+                    const observacoesMes = [];
+                    
+                    fornecedores.forEach(fornecedor => {
+                        fornecedor.observacoes.forEach(obs => {
+                            if (obs.mesAno === mesAno) {
+                                observacoesMes.push({
+                                    fornecedor: fornecedor.nome,
+                                    cnpj: fornecedor.cnpjFormatado,
+                                    local: fornecedor.local,
+                                    empresa: fornecedor.empresa,
+                                    leiComplementar: fornecedor.leiComplementar,
+                                    observacao: obs.descricao,
+                                    data: new Date(obs.data).toLocaleDateString('pt-BR')
+                                });
+                            }
+                        });
                     });
-                });
-                
-                // Calcular estatísticas
-                const totalFornecedores = fornecedores.length;
-                const fornecedoresComStrikes = fornecedores.filter(f => f.strikes > 0).length;
-                const fornecedoresBloqueados = fornecedores.filter(f => f.strikes >= 3).length;
-                const novosStrikesMes = fornecedores.filter(f => 
-                    f.ultimoStrike === mesAno
-                ).length;
-                
-                // Criar documento PDF
-                const docDefinition = {
-                    content: [
-                        { text: `Relatório Mensal de Strikes - ${month}/${year}`, style: 'header' },
-                        { text: `Gerado em: ${now.toLocaleDateString('pt-BR')}`, style: 'subheader' },
-                        { text: '\n' },
-                        { text: 'Resumo Estatístico', style: 'sectionHeader' },
-                        {
-                            table: {
-                                widths: ['*', '*', '*', '*'],
-                                body: [
-                                    ['Total Fornecedores', 'Fornecedores com Strikes', 'Fornecedores Bloqueados', 'Novos Strikes no Mês'],
-                                    [totalFornecedores, fornecedoresComStrikes, fornecedoresBloqueados, novosStrikesMes]
-                                ]
+                    
+                    // Calcular estatísticas
+                    const totalFornecedores = fornecedores.length;
+                    const fornecedoresComStrikes = fornecedores.filter(f => f.strikes > 0).length;
+                    const fornecedoresBloqueados = fornecedores.filter(f => f.strikes >= 3).length;
+                    const novosStrikesMes = fornecedores.filter(f => 
+                        f.ultimoStrike === mesAno
+                    ).length;
+                    
+                    // Criar documento PDF
+                    const docDefinition = {
+                        content: [
+                            { text: `Relatório Mensal de Strikes - ${month}/${year}`, style: 'header' },
+                            { text: `Gerado em: ${now.toLocaleDateString('pt-BR')}`, style: 'subheader' },
+                            { text: '\n' },
+                            { text: 'Resumo Estatístico', style: 'sectionHeader' },
+                            {
+                                table: {
+                                    widths: ['*', '*', '*', '*'],
+                                    body: [
+                                        ['Total Fornecedores', 'Fornecedores com Strikes', 'Fornecedores Bloqueados', 'Novos Strikes no Mês'],
+                                        [totalFornecedores, fornecedoresComStrikes, fornecedoresBloqueados, novosStrikesMes]
+                                    ]
+                                }
+                            },
+                            { text: '\n' },
+                            { text: 'Observações Registradas no Mês', style: 'sectionHeader' },
+                            {
+                                table: {
+                                    widths: ['*', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['Fornecedor', 'CNPJ', 'Local', 'Empresa', 'Lei 116', 'Observação'],
+                                        ...observacoesMes.map(obs => [
+                                            obs.fornecedor, 
+                                            obs.cnpj, 
+                                            obs.local, 
+                                            obs.empresa,
+                                            obs.leiComplementar || '-',
+                                            { text: obs.observacao, italics: true }
+                                        ])
+                                    ]
+                                }
                             }
-                        },
-                        { text: '\n' },
-                        { text: 'Observações Registradas no Mês', style: 'sectionHeader' },
-                        {
-                            table: {
-                                widths: ['*', '*', '*', '*', '*', '*'],
-                                body: [
-                                    ['Fornecedor', 'CNPJ', 'Local', 'Empresa', 'Lei 116', 'Observação'],
-                                    ...observacoesMes.map(obs => [
-                                        obs.fornecedor, 
-                                        obs.cnpj, 
-                                        obs.local, 
-                                        obs.empresa,
-                                        obs.leiComplementar || '-',
-                                        { text: obs.observacao, italics: true }
-                                    ])
-                                ]
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                alignment: 'center',
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 12,
+                                alignment: 'center',
+                                margin: [0, 0, 0, 20]
+                            },
+                            sectionHeader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
                             }
                         }
-                    ],
-                    styles: {
-                        header: {
-                            fontSize: 18,
-                            bold: true,
-                            alignment: 'center',
-                            margin: [0, 0, 0, 10]
-                        },
-                        subheader: {
-                            fontSize: 12,
-                            alignment: 'center',
-                            margin: [0, 0, 0, 20]
-                        },
-                        sectionHeader: {
-                            fontSize: 14,
-                            bold: true,
-                            margin: [0, 10, 0, 5]
-                        }
-                    }
-                };
-                
-                pdfMake.createPdf(docDefinition).download(`relatorio_strikes_${month}_${year}.pdf`);
-                showToast('Relatório PDF gerado com sucesso!');
+                    };
+                    
+                    pdfMake.createPdf(docDefinition).download(`relatorio_strikes_${month}_${year}.pdf`);
+                    showToast('Relatório PDF gerado com sucesso!');
+                    btnGenerateReport.innerHTML = '<i class="fas fa-check"></i> Sucesso!';
+                    setTimeout(() => {
+                        btnGenerateReport.innerHTML = '<i class="fas fa-file-pdf"></i> Gerar Relatório PDF';
+                    }, 1000);
+                }, 800);
             } catch (error) {
+                btnGenerateReport.innerHTML = '<i class="fas fa-times"></i> Erro';
+                setTimeout(() => {
+                    btnGenerateReport.innerHTML = '<i class="fas fa-file-pdf"></i> Gerar Relatório PDF';
+                }, 1000);
                 handleError(error, 'Geração de relatório PDF');
             }
         }
 
-        function showToast(message, type = 'success') {
+        function showToast(message, type = 'success', duration = 3000) {
             try {
+                // Resetar toast
                 toast.className = 'toast';
+                toast.style.animation = 'none';
+                void toast.offsetWidth; // Trigger reflow
+                
+                // Configurar tipo
                 toast.classList.add(type);
                 toastMessage.textContent = message;
+                
+                // Ícones diferentes para cada tipo
+                const icon = toast.querySelector('i');
+                icon.className = {
+                    'success': 'fas fa-check-circle',
+                    'error': 'fas fa-exclamation-circle',
+                    'warning': 'fas fa-exclamation-triangle',
+                    'info': 'fas fa-info-circle'
+                }[type] || 'fas fa-check-circle';
+                
+                // Animação de entrada
+                toast.style.animation = 'fadeInUp 0.5s ease-out';
                 toast.classList.add('show');
                 
+                // Fechar automaticamente após a duração
                 setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
+                    toast.style.animation = 'fadeOutDown 0.5s ease-in';
+                    setTimeout(() => toast.classList.remove('show'), 500);
+                }, duration);
+                
             } catch (error) {
                 console.error('Erro ao exibir toast:', error);
             }
@@ -3170,6 +3439,7 @@
         window.changePage = function(newPage) {
             currentPage = newPage;
             renderizarTabela();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
     </script>
 </body>
